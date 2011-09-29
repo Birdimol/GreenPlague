@@ -13,6 +13,8 @@ Jeu::Jeu(sf::RenderWindow* App_)
     this->App = App_;
 }
 
+//test de modif
+
 int Jeu::lancer()
 {
     Map map(40,30);
