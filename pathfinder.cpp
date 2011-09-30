@@ -450,27 +450,27 @@ void Pathfinder::afficher_parcourt(vector<int> carte_vector, int largeur_carte, 
 
     sf::Image icase_vide;
     sf::Sprite scase_vide;
-    icase_vide.LoadFromFile("case_vide.png");
+    icase_vide.LoadFromFile("pictures/case_vide.png");
     scase_vide.SetImage(icase_vide);
 
     sf::Image imur;
     sf::Sprite smur;
-    imur.LoadFromFile("mur.png");
+    imur.LoadFromFile("pictures/mur.png");
     smur.SetImage(imur);
 
     sf::Image idepart;
     sf::Sprite sdepart;
-    idepart.LoadFromFile("depart.png");
+    idepart.LoadFromFile("pictures/depart.png");
     sdepart.SetImage(idepart);
 
     sf::Image iarrivee;
     sf::Sprite sarrivee;
-    iarrivee.LoadFromFile("arrivee.png");
+    iarrivee.LoadFromFile("pictures/arrivee.png");
     sarrivee.SetImage(iarrivee);
 
     sf::Image ipassage;
     sf::Sprite spassage;
-    ipassage.LoadFromFile("passage.png");
+    ipassage.LoadFromFile("pictures/passage.png");
     spassage.SetImage(ipassage);
 
     int compte =0;

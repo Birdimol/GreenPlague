@@ -10,12 +10,12 @@ Player::Player(string nom_envoye, Map* map_envoyee)
     munitions = 0;
     arme = false;
 
-    if (image.LoadFromFile("sprite.png"))
+    if (image.LoadFromFile("pictures/sprite.png"))
     {
-        image_shoot.LoadFromFile("shoot.png");
+        image_shoot.LoadFromFile("pictures/shoot.png");
         sprite_shoot.SetImage(image_shoot);
 
-        image_cercle.LoadFromFile("cercle.png");
+        image_cercle.LoadFromFile("pictures/cercle.png");
         sprite_cercle.SetImage(image_cercle);
 
         sprite.SetImage(image);

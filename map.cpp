@@ -8,8 +8,8 @@ Map::Map(int largeur_envoyee, int hauteur_envoyee)
     hauteur = hauteur_envoyee;
     int nbr_cases = largeur*hauteur;
 
-    idalle.LoadFromFile("dalle.png");
-    imur.LoadFromFile("mur.png");
+    idalle.LoadFromFile("pictures/dalle.png");
+    imur.LoadFromFile("pictures/mur.png");
 
     for(int i=0;i<nbr_cases;i++)
     {

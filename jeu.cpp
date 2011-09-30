@@ -25,7 +25,7 @@ int Jeu::lancer()
     //Balle* balle = new Balle();
 
     sf::Font MyFont;
-    if (!MyFont.LoadFromFile("verdana.ttf", 50))
+    if (!MyFont.LoadFromFile("pictures/verdana.ttf", 50))
 
     //??????????????????????????????????????????
     sf::String Texte;
@@ -51,7 +51,7 @@ int Jeu::lancer()
 
     sf::Image image_arme;
     sf::Sprite sprite_arme;
-    image_arme.LoadFromFile("pistolet.png");
+    image_arme.LoadFromFile("pictures/pistolet.png");
     sprite_arme.SetImage(image_arme);
 
     sf::Image image_coeur_vide;
@@ -61,10 +61,10 @@ int Jeu::lancer()
     sf::Sprite sprite_coeur_plein;
 
     sf::Image image_balle;
-    image_balle.LoadFromFile("balle.png");
+    image_balle.LoadFromFile("pictures/balle.png");
 
-    image_coeur_vide.LoadFromFile("coeur_vide.png");
-    image_coeur_plein.LoadFromFile("coeur_plein.png");
+    image_coeur_vide.LoadFromFile("pictures/coeur_vide.png");
+    image_coeur_plein.LoadFromFile("pictures/coeur_plein.png");
 
     sprite_coeur_vide.SetImage(image_coeur_vide);
     sprite_coeur_plein.SetImage(image_coeur_plein);

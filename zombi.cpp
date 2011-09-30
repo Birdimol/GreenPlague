@@ -7,7 +7,7 @@ Zombi::Zombi(Player *player_envoye, Map *map_envoyee, int x, int y)
 {
     player = player_envoye;
     map = map_envoyee;
-    if (image.LoadFromFile("zombi.png"))
+    if (image.LoadFromFile("pictures/zombi.png"))
     {
         sprite.SetImage(image);
 
