@@ -1,0 +1,96 @@
+# depslib dependency file v1.0
+1316676888 source:/home/abobier/Sources/GreenPlague/sources/balle.cpp
+	"balle.hpp"
+
+1316673599 /home/abobier/Sources/GreenPlague/sources/balle.hpp
+	<SFML/Window.hpp>
+	<SFML/System.hpp>
+	<iostream>
+	<SFML/Graphics.hpp>
+	<string>
+	"map.hpp"
+
+1317829851 /home/abobier/Sources/GreenPlague/sources/map.hpp
+	<SFML/Window.hpp>
+	<SFML/System.hpp>
+	<iostream>
+	<SFML/Graphics.hpp>
+	<vector>
+	"point.hpp"
+
+1317817579 /home/abobier/Sources/GreenPlague/sources/point.hpp
+	<iostream>
+
+1317374025 source:/home/abobier/Sources/GreenPlague/sources/case.cpp
+	"case.hpp"
+
+1317374759 /home/abobier/Sources/GreenPlague/sources/case.hpp
+	"point.hpp"
+
+1317829788 source:/home/abobier/Sources/GreenPlague/sources/ecranAccueil.cpp
+	"balle.hpp"
+	"zombiManager.hpp"
+	"player.hpp"
+	"map.hpp"
+	"ecranAccueil.hpp"
+	"jeu.hpp"
+
+1317733519 /home/abobier/Sources/GreenPlague/sources/zombiManager.hpp
+	<SFML/Window.hpp>
+	<SFML/System.hpp>
+	<iostream>
+	<SFML/Graphics.hpp>
+	<string>
+	"zombi.hpp"
+	"pathfinder.hpp"
+	"map.hpp"
+	<vector>
+
+1317829851 /home/abobier/Sources/GreenPlague/sources/zombi.hpp
+	<SFML/Window.hpp>
+	<SFML/System.hpp>
+	<iostream>
+	<SFML/Graphics.hpp>
+	<string>
+	"player.hpp"
+	"map.hpp"
+
+1316086451 /home/abobier/Sources/GreenPlague/sources/player.hpp
+	<SFML/Window.hpp>
+	<SFML/System.hpp>
+	<iostream>
+	<SFML/Graphics.hpp>
+	<string>
+	"map.hpp"
+
+1317794471 /home/abobier/Sources/GreenPlague/sources/pathfinder.hpp
+	<iostream>
+	<vector>
+	<math.h>
+	<SFML/Graphics.hpp>
+	"point.hpp"
+	"case.hpp"
+
+1315994796 /home/abobier/Sources/GreenPlague/sources/ecranAccueil.hpp
+	<SFML/Window.hpp>
+	<SFML/System.hpp>
+	<iostream>
+	<SFML/Graphics.hpp>
+	<vector>
+
+1315994439 /home/abobier/Sources/GreenPlague/sources/jeu.hpp
+	<SFML/Window.hpp>
+	<SFML/System.hpp>
+	<iostream>
+	<SFML/Graphics.hpp>
+	<vector>
+
+1317801837 source:/home/abobier/Sources/GreenPlague/sources/jeu.cpp
+	"balle.hpp"
+	"zombiManager.hpp"
+	"player.hpp"
+	"map.hpp"
+	"jeu.hpp"
+	"pathfinder.hpp"
+	<sstream>
+

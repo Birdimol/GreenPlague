@@ -7,7 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-#include "Point.hpp"
+#include "point.hpp"
 
 using namespace std;
 

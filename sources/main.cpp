@@ -1,4 +1,4 @@
-#include "Point.hpp"
+#include "point.hpp"
 
 
 #define M_PI  3.14159265358979323846
@@ -17,7 +17,7 @@
 #include "jeu.hpp"
 */
 
-#include "ecran_accueil.hpp"
+#include "ecranAccueil.hpp"
 #include "tools.cpp"
 
 using namespace std;

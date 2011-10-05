@@ -7,8 +7,8 @@
 #include <SFML/Graphics.hpp>
 
 #include <string>
-#include "Player.hpp"
-#include "Map.hpp"
+#include "player.hpp"
+#include "map.hpp"
 
 class Zombi
 {
