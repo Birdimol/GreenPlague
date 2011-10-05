@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Greenplague" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\Greenplague" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DSFML_DYNAMIC" />
+				</Compiler>
+				<Linker>
+					<Add option="-lsfml-graphics" />
+					<Add option="-lsfml-window" />
+					<Add option="-lsfml-system" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\Greenplague" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="Player.cpp" />
+		<Unit filename="Player.hpp" />
+		<Unit filename="balle.cpp" />
+		<Unit filename="balle.hpp" />
+		<Unit filename="ecran_accueil.cpp" />
+		<Unit filename="ecran_accueil.hpp" />
+		<Unit filename="jeu.cpp" />
+		<Unit filename="jeu.hpp" />
+		<Unit filename="main.cpp" />
+		<Unit filename="map.cpp" />
+		<Unit filename="map.hpp" />
+		<Unit filename="zombi.cpp" />
+		<Unit filename="zombi.hpp" />
+		<Unit filename="zombiManager.cpp" />
+		<Unit filename="zombiManager.hpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
