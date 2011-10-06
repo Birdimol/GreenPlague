@@ -33,7 +33,6 @@ void ZombiManager::detecte_selection(int xMousePressed,int yMousePressed,int xMo
 void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMousePressed,sf::RenderWindow* App, Pathfinder* pathfinder)
 {
     int temp = tableau_zombi.size();
-    int compte = 0;
 
     vector<int> liste_x;
     vector<int> liste_y;
@@ -99,7 +98,7 @@ void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMous
         }
     }
 
-    for(int i=0;i<liste_case_occupee.size();i++)
+    for(int i=0;i<((int)liste_case_occupee.size());i++)
     {
         cout << "case " << liste_case_occupee[i].x << ", " << liste_case_occupee[i].y << "occupee." << endl;;
     }
@@ -148,7 +147,7 @@ void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMous
             cout << "Path de taille : " << parcourt.size() << endl;
             if(parcourt.size() > 0)
             {
-                for(int j=0; j<parcourt.size(); j++)
+                for(int j=0;((int)j<parcourt.size()); j++)
                 {
                     if(j==0)
                     {

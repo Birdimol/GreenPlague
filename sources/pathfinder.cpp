@@ -249,7 +249,6 @@ vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
     if(taille_parcourt > 0)
     {
         int repere_precedent = taille_parcourt-1;
-        int repere_actuel = taille_parcourt-1;
 
         vector<Point> inutiles;
 

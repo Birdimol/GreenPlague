@@ -145,6 +145,8 @@ int Player::shoot()
         //pas ready
         return 0;
     }
+
+    return 0;
 }
 
 void Player::avancer(float distance)

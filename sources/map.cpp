@@ -26,7 +26,6 @@ Map::Map(string FileName)
         variable_temp = ligneLue.substr(ligneLue.find(":")+1,ligneLue.find(";")-ligneLue.find(":")+1);
         hauteur = strToInt(variable_temp);
 
-        int nbr_cases = largeur*hauteur;
         taille_case = 40;
 
         idalle.LoadFromFile("pictures/dalle.png");
@@ -78,12 +77,14 @@ Map::Map(string FileName)
             }
         }
         fichier.close();  // on ferme le fichier
+        cout << "Map chargee !" << endl;
     }
     else  // sinon
     {
         error_happened = true;
         cout << "Impossible d'ouvrir la map : " << completeFileName << endl;
     }
+
 }
 
 bool Map::estMur(Point case_)

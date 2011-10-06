@@ -18,6 +18,7 @@ Jeu::Jeu(sf::RenderWindow* App_)
 
 int Jeu::lancer()
 {
+    float ElapsedTime;
 
     sf::Color background(0,0,0,0);
     sf::Color border(0,200,0,255);
@@ -57,12 +58,7 @@ int Jeu::lancer()
     ZombiManager* zombiManager = new ZombiManager(&map);
 
     sf::Font MyFont;
-    if (!MyFont.LoadFromFile("fonts/verdana.ttf", 50))
-
-    float ElapsedTime = 0;
-    float ElapsedTime = 0;
-
-    int numero_zombie = -1;
+    MyFont.LoadFromFile("fonts/verdana.ttf", 50);
 
      // Boucle principale
     while (App->IsOpened())
@@ -122,7 +118,7 @@ int Jeu::lancer()
         }
 
         // Gestion du temps
-        ElapsedTime = App->GetFrameTime();
+         ElapsedTime = App->GetFrameTime();
 
         // Mouvements
         if (App->GetInput().IsKeyDown(sf::Key::Left))
@@ -175,8 +171,6 @@ int Jeu::lancer()
     //On a gagné !
     if(zombiManager->get_nombre_zombis() == 0)
     {
-        int zooming = 1;
-
         while(temoin + 2 > ElapsedTime)
         {
             sf::Event Event;

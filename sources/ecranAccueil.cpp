@@ -21,7 +21,7 @@ int EcranAccueil::lancer()
     sf::Sprite sprite_pressEnter;
 
     image_ecran_accueil.LoadFromFile("pictures/ecran_accueil.png");
-    image_pressEnter.LoadFromFile("pictures/press_enter.png");
+    image_pressEnter.LoadFromFile("pictures/pressEnter.png");
 
     sprite_ecran_accueil.SetImage(image_ecran_accueil);
     sprite_pressEnter.SetImage(image_pressEnter);

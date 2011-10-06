@@ -13,7 +13,13 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-DSFML_DYNAMIC" />
 				</Compiler>
+				<Linker>
+					<Add option="-lsfml-graphics" />
+					<Add option="-lsfml-window" />
+					<Add option="-lsfml-system" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin\Release\GreenPlague" prefix_auto="1" extension_auto="1" />
@@ -25,6 +31,9 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-lsfml-graphics" />
+					<Add option="-lsfml-window" />
+					<Add option="-lsfml-system" />
 				</Linker>
 			</Target>
 		</Build>
@@ -32,7 +41,34 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="main.cpp" />
+		<Linker>
+			<Add option="-lsfml-graphics" />
+			<Add option="-lsfml-window" />
+			<Add option="-lsfml-system" />
+		</Linker>
+		<Unit filename="sources\balle.cpp" />
+		<Unit filename="sources\balle.hpp" />
+		<Unit filename="sources\case.cpp" />
+		<Unit filename="sources\case.hpp" />
+		<Unit filename="sources\ecranAccueil.cpp" />
+		<Unit filename="sources\ecranAccueil.hpp" />
+		<Unit filename="sources\jeu.cpp" />
+		<Unit filename="sources\jeu.hpp" />
+		<Unit filename="sources\main.cpp" />
+		<Unit filename="sources\map.cpp" />
+		<Unit filename="sources\map.hpp" />
+		<Unit filename="sources\pathfinder.cpp" />
+		<Unit filename="sources\pathfinder.hpp" />
+		<Unit filename="sources\player.cpp" />
+		<Unit filename="sources\player.hpp" />
+		<Unit filename="sources\point.cpp" />
+		<Unit filename="sources\point.hpp" />
+		<Unit filename="sources\tools.cpp" />
+		<Unit filename="sources\tools.hpp" />
+		<Unit filename="sources\zombi.cpp" />
+		<Unit filename="sources\zombi.hpp" />
+		<Unit filename="sources\zombiManager.cpp" />
+		<Unit filename="sources\zombiManager.hpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
