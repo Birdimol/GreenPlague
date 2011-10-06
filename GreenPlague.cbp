@@ -46,6 +46,7 @@
 			<Add option="-lsfml-window" />
 			<Add option="-lsfml-system" />
 		</Linker>
+		<Unit filename="maps\map01.gpm" />
 		<Unit filename="sources\balle.cpp" />
 		<Unit filename="sources\balle.hpp" />
 		<Unit filename="sources\case.cpp" />

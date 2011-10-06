@@ -123,7 +123,7 @@ Point Map::getCaseLibreProche(Point point,vector<Point> liste_case_occupee)
     int iteration_repere = 0;
     bool trouve = false;
 
-    while(!trouve && iteration_repere < 3)
+    while(!trouve && iteration_repere < 50)
     {
         for(int i=-iteration_repere;i<iteration_repere+1;i++)
         {
@@ -136,9 +136,10 @@ Point Map::getCaseLibreProche(Point point,vector<Point> liste_case_occupee)
                     {
                         Point temp((point.x+j),(point.y+i));
                          //si la case proche n'est pas un mur ou n'est pas occuppée, ça fait l'affaire !
+
                         if(!estMur(temp) && !Tools::contient_point(liste_case_occupee,temp))
                         {
-                            //alors OK !!!
+                            //Il faudrait verifier si cette case vide est accessible !
                             return temp;
                         }
                     }

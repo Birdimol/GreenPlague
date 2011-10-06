@@ -1,7 +1,7 @@
 #include "pathfinder.hpp"
 
 
-#define NBRE_MAX_ITERATION 1000
+#define NBRE_MAX_ITERATION 500
 #define LARGEUR_UNITE 10
 
 bool operator==(Point const& a, Point const& b)
@@ -220,7 +220,6 @@ vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
         //cout << " iterations : " << nombre_iterations << endl;
     }
 
-    //cout << "Fin d'algo, a present on simplifie le path" << endl;
 
     //si on a trouvé une route
     if(actuel == arrivee)
@@ -363,7 +362,7 @@ vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
 
 bool Pathfinder::traverse_mur(float x1,float y1,float x2,float y2)
 {
-    //cout << "la droite va en x de " << x1 << " a " << x2 << endl;
+    //cout << "la droite va en x de " << x1<<", "<<y1 << " a " << x2 << ", " <<y2 << endl;
 
     if(x2 < x1)
     {
@@ -383,17 +382,20 @@ bool Pathfinder::traverse_mur(float x1,float y1,float x2,float y2)
     {
         for(int j=0;j<largeur;j++)
         {
-            y = j * taille_case;
-            x = i * taille_case;
+            y = i * taille_case;
+            x = j * taille_case;
 
             //si c'est un mur
-            if(carte[(i)+j*largeur] == 1)
+            if(carte[(j)+i*largeur] == 1)
             {
+                //cout << "case " << i << ", " << j << "(" <<((i)+j*largeur) << ") est un  mur."<< endl;
                 //il y a possibilité de chevauchement
                 if(x1 <= x+taille_case && x2 >= x)
                 {
                     float x_min=x;
                     float x_max=x+taille_case;
+
+                    //cout << "possibilite de chevauchement entre : " << x_min << ", et : " << x_max << endl;
 
                     if(x1 > x)
                     {
