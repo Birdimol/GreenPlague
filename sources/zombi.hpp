@@ -29,6 +29,7 @@ class Zombi
     bool getCible();
     void set_cible_du_zombie(int x, int y);
     void add_cible_du_zombie(int x, int y);
+    Point get_final_destination();
     //void recevoirDegats(int nbDegats);
     //void attaquer(Personnage &cible);
     //bool estVivant();

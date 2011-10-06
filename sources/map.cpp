@@ -72,7 +72,11 @@ Map::Map(string FileName)
                 if(strToInt(variable_temp)==2)
                 {
                     Point temp_(j,i);
+                    //Ajout du zombie dans la liste des zombies
                     tableau_zombie.push_back(temp_);
+
+                    //ajout de la position du zombi dans la liste des cases occupées
+                    add_liste_case_occupee(temp_);
                 }
             }
         }
@@ -89,7 +93,6 @@ Map::Map(string FileName)
 
 bool Map::estMur(Point case_)
 {
-    cout << "coordonne case recue : " << case_.x << ", " << case_.y << " ce qui donne : " << case_.x+case_.y*largeur << endl;
     if(tableau_cases[case_.x+case_.y*largeur] == 1)
     {
         return true;
@@ -120,16 +123,16 @@ Point Map::getCaseLibreProche(Point point,vector<Point> liste_case_occupee)
     int iteration_repere = 0;
     bool trouve = false;
 
-    while(!trouve && iteration_repere < 50)
+    while(!trouve && iteration_repere < 3)
     {
-        for(int i=-1;i<2;i++)
+        for(int i=-iteration_repere;i<iteration_repere+1;i++)
         {
-            for(int j=-1;j<2;j++)
+            for(int j=-iteration_repere;j<iteration_repere+1;j++)
             {
-                if(abs(i) > iteration_repere || abs(j) > iteration_repere)
+                if(abs(i) >= iteration_repere || abs(j) >= iteration_repere)
                 {
                     //si la case est bien dans les limites de la carte
-                    if((point.x+j) > -1 && (point.x+j) < largeur && (point.y+i) > -1 && (point.y+i) < hauteur)
+                    if((point.x+j*iteration_repere) > -1 && (point.x+j) < largeur && (point.y+i) > -1 && (point.y+i) < hauteur)
                     {
                         Point temp((point.x+j),(point.y+i));
                          //si la case proche n'est pas un mur ou n'est pas occuppée, ça fait l'affaire !
@@ -258,7 +261,7 @@ int Map::collision(float x_cercle,float y_cercle,int *x_bloc,int *y_bloc)
                     //collision avec le bord
                     if(x_cercle + 20 > 800 || x_cercle - 20 < 0 || y_cercle + 20 > 600 || y_cercle - 20 < 0)
                     {
-                        cout << x_cercle << ", " << y_cercle <<endl;
+                        //cout << x_cercle << ", " << y_cercle <<endl;
                         return 1;
                     }
                 }
@@ -278,6 +281,34 @@ int Map::collision(float x_cercle,float y_cercle,int *x_bloc,int *y_bloc)
 int Map::getTailleCase()
 {
     return taille_case;
+}
+
+void Map::add_liste_case_occupee(Point a)
+{
+    liste_case_occupee.push_back(a);
+}
+
+void Map::delete_liste_case_occupee(Point a)
+{
+    bool erased = false;
+    do
+    {
+        int size = liste_case_occupee.size();
+        erased = false;
+        for(int i=0;i<size;i++)
+        {
+            if(liste_case_occupee[i].x == a.x && liste_case_occupee[i].y == a.y)
+            {
+                liste_case_occupee.erase(liste_case_occupee.begin()+i);
+                erased = true;
+            }
+        }
+    }while(erased);
+}
+
+vector<Point> Map::get_liste_case_occupee()
+{
+    return liste_case_occupee;
 }
 
 void Map::afficher(sf::RenderWindow* App)

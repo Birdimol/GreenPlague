@@ -215,6 +215,22 @@ bool Zombi::getCible()
     return cible;
 }
 
+Point Zombi::get_final_destination()
+{
+    Point temp(-1,-1);
+
+    //si il n'y a pas de destination
+    if(cible_x.size() == 0)
+    {
+        return temp;
+    }
+
+    temp.x = floor(cible_x[0]/map->getTailleCase());
+    temp.y = floor(cible_y[0]/map->getTailleCase());
+
+    return temp;
+}
+
 void Zombi::afficher_data()
 {
     cout << "Etat        : "<<etat<<endl;
@@ -263,9 +279,13 @@ void Zombi::avancer(float ElapsedTime)
                 if(distance >= distance_attaque || vois_joueur == 0)
                 {
                     //gestion des collisions
-                    int x_bloc = -1;
-                    int y_bloc = -1;
+                    //int x_bloc = -1;
+                    //int y_bloc = -1;
 
+                    sprite.Move(direction_x * vitesse * ElapsedTime, 0);
+                    sprite.Move(0, direction_y * vitesse * ElapsedTime);
+
+                    /*
                     //deplacement en x
                     if(map->collision(sprite.GetPosition().x+(direction_x * vitesse * ElapsedTime),sprite.GetPosition().y, &x_bloc, &y_bloc))
                     {
@@ -273,7 +293,7 @@ void Zombi::avancer(float ElapsedTime)
                     }
                     else
                     {
-                        sprite.Move(direction_x * vitesse * ElapsedTime, 0);
+
                     }
 
                     //deplacement en y
@@ -283,8 +303,9 @@ void Zombi::avancer(float ElapsedTime)
                     }
                     else
                     {
-                        sprite.Move(0, direction_y * vitesse * ElapsedTime);
+
                     }
+                    */
                 }
                 else
                 {

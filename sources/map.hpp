@@ -28,6 +28,9 @@ class Map
     vector<Point> get_tableau_zombie();
     bool estMur(Point case_);
     Point getCaseLibreProche(Point point, vector<Point> liste_case_occupee);
+    vector<Point> get_liste_case_occupee();
+    void add_liste_case_occupee(Point a);
+    void delete_liste_case_occupee(Point a);
 
     private:
     vector<int> tableau_cases;
@@ -37,6 +40,7 @@ class Map
     sf::Image idalle;
     sf::Image imur;
     vector<sf::Sprite> sdalle;
+    vector<Point> liste_case_occupee;
     int taille_case;
     bool error_happened;
 };

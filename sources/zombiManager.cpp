@@ -50,6 +50,7 @@ void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMous
         }
     }
 
+    /*
     float moyenne_x = 0;
     float moyenne_y = 0;
 
@@ -87,96 +88,69 @@ void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMous
     App->Draw(line);
     App->Draw(line2);
 
-    vector<Point> liste_case_occupee;
+    */
 
     int nombre_zombies = get_nombre_zombis();
     for(int i=0;i<nombre_zombies;i++)
     {
         if(!tableau_zombi[i]->getCible())
         {
-            liste_case_occupee.push_back(tableau_zombi[i]->get_position());
+            //map->add_liste_case_occupee(tableau_zombi[i]->get_position());
         }
-    }
-
-    for(int i=0;i<((int)liste_case_occupee.size());i++)
-    {
-        cout << "case " << liste_case_occupee[i].x << ", " << liste_case_occupee[i].y << "occupee." << endl;;
     }
 
     arrivee.x = xMousePressed/map->getTailleCase();
     arrivee.y = yMousePressed/map->getTailleCase();
 
-    //si l'arrivee est un mur
-    cout << "est-ce un mur ?" << endl;
-    if(map->estMur(arrivee))
-    {
-        cout << "arrivee est un mur !" << endl;
-        arrivee = map->getCaseLibreProche(arrivee,liste_case_occupee);
-    }
-    else
-    {
-        cout << "arrivee est pas un mur !" << endl;
-    }
-
     for(int i=0; i<nombre_zombies; i++)
     {
-        cout << "pour zombie selectionne " << i << endl;
-
         Point arrivee_reelle = arrivee;
 
         if(tableau_zombi[i]->getCible())
         {
-            //on va envoyer les zombies d'abord à la case voulue, puis sur la case vide la plus proche et etc...
-            cout << "arrivee reelle" << arrivee_reelle.x << ", " << arrivee_reelle.y << endl;
-            if(Tools::contient_point(liste_case_occupee,arrivee_reelle))
+            //si l'arrivee est un mur
+            if(map->estMur(arrivee))
             {
-                cout << "La case est deja occupee par un zombie !" << endl;
-                arrivee_reelle = map->getCaseLibreProche(arrivee_reelle,liste_case_occupee);
+                arrivee_reelle = map->getCaseLibreProche(arrivee,map->get_liste_case_occupee());
             }
-            else
+
+            //Si un zombie est déjà sur la case ou est en train de s'y rendre
+            if(Tools::contient_point(map->get_liste_case_occupee(),arrivee_reelle))
             {
-                cout << "La case est libre !" << endl;
+                arrivee_reelle = map->getCaseLibreProche(arrivee_reelle,map->get_liste_case_occupee());
             }
 
             depart.x = tableau_zombi[i]->getSprite().GetPosition().x/map->getTailleCase();
             depart.y = tableau_zombi[i]->getSprite().GetPosition().y/map->getTailleCase();
 
-            cout << "calcul du path() pour aller sur la case : " << arrivee_reelle.x << ", " << arrivee_reelle.y << endl;
             parcourt = pathfinder->calcul_path(depart,arrivee_reelle);
 
-            cout << "Path de taille : " << parcourt.size() << endl;
-            if(parcourt.size() > 0)
+            if(((int)parcourt.size()) > 0)
             {
-                for(int j=0;((int)j<parcourt.size()); j++)
+                for(int j=0;j<((int)parcourt.size()-1); j++)
                 {
                     if(j==0)
                     {
-                        //la premiere fois on supprime les anciennes destinations
+                        //la premiere fois on supprime les anciennes destinations et on enleve la case occupee par le zombie des cases occupees
+                        map->delete_liste_case_occupee(depart);
+
+                        //si le zombie était deja en route pour une destination, il faut annuler cette destination dans la liste des cases occupées.
+                        if(tableau_zombi[i]->get_final_destination().x != -1)
+                        {
+                            Point temporaire(tableau_zombi[i]->get_final_destination().x,tableau_zombi[i]->get_final_destination().y);
+                             map->delete_liste_case_occupee(temporaire);
+                        }
+
                         tableau_zombi[i]->set_cible_du_zombie(parcourt[j].x*map->getTailleCase()+map->getTailleCase()/2,parcourt[j].y*map->getTailleCase()+map->getTailleCase()/2);
                     }
                     else
                     {
                         tableau_zombi[i]->add_cible_du_zombie(parcourt[j].x*map->getTailleCase()+map->getTailleCase()/2,parcourt[j].y*map->getTailleCase()+map->getTailleCase()/2);
                     }
-                    cout << "x,y du path ajoute : " << parcourt[j].x*map->getTailleCase()+map->getTailleCase()/2 <<", "<<parcourt[j].y*map->getTailleCase()+map->getTailleCase()/2<< endl;
                 }
+                //cout << "Ajout du point : " << arrivee_reelle.x <<", "<<arrivee_reelle.y << " dans la liste des cases occuppees."<< endl;
+                map->add_liste_case_occupee(arrivee_reelle);
             }
-            cout << endl;
-            /*
-            }
-            else if(compte%2 == 0)
-            {
-                tableau_zombi[i]->set_cible_du_zombie(xMousePressed+(compte-1)*distance_x_entre_destination+distance_x_entre_destination,yMousePressed+(compte-1)*distance_y_entre_destination+distance_y_entre_destination);
-                cout << ((int)(compte/2)-1) << endl<< endl;
-            }
-            else
-            {
-                tableau_zombi[i]->set_cible_du_zombie(xMousePressed+(compte)*-distance_x_entre_destination-distance_x_entre_destination,yMousePressed+(compte)*-distance_y_entre_destination-distance_y_entre_destination);
-                cout << ((int)(compte/2)) << endl<< endl;
-            }
-
-            compte++;
-            */
         }
     }
 }

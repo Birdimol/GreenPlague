@@ -93,7 +93,6 @@ vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
     carte_distances[depart.x + depart.y*largeur].H = distance_entre_2_point(depart,arrivee);
     carte_distances[depart.x + depart.y*largeur].G = 0;
     carte_distances[depart.x + depart.y*largeur].F = carte_distances[depart.x + depart.y*largeur].G + carte_distances[depart.x + depart.y*largeur].H;
-    cout << "initialisation de la première case, H : "<< carte_distances[depart.x + depart.y*largeur].H << ", G : "<< carte_distances[depart.x + depart.y*largeur].G << ", F : " << carte_distances[depart.x + depart.y*largeur].F << endl;
 
     vector<Point> points_deja_verifies;
 
@@ -122,7 +121,6 @@ vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
                         carte_distances[point_temp.x + point_temp.y*largeur].F = carte_distances[point_temp.x + point_temp.y*largeur].G+carte_distances[point_temp.x + point_temp.y*largeur].H;
                         carte_distances[point_temp.x + point_temp.y*largeur].set_parent(actuel.x,actuel.y);
                         //cout << "nouveau parent pour " << point_temp.x  << ", " << point_temp.y << " : " << actuel.x << ", " << actuel.y << endl;
-                        cout << "nouvelles valeurs pour " << point_temp.x  << ", " << point_temp.y << " G: "<< carte_distances[point_temp.x + point_temp.y*largeur].G << ", H: "<< carte_distances[point_temp.x + point_temp.y*largeur].H << ", F:" << carte_distances[point_temp.x + point_temp.y*largeur].F<< endl;
                     }
                     else
                     {
