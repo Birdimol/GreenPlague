@@ -5,7 +5,7 @@
 #include "jeu.hpp"
 #include "pathfinder.hpp"
 
-
+#include <limits>
 
 #include <sstream>
 
@@ -19,6 +19,12 @@ Jeu::Jeu(sf::RenderWindow* App_)
 int Jeu::lancer()
 {
     float ElapsedTime;
+
+    sf::Vector2f Center(400, 300);
+    sf::Vector2f HalfSize(400, 300);
+    sf::View View1(Center, HalfSize);
+
+
 
     sf::Color background(0,0,0,0);
     sf::Color border(0,200,0,255);
@@ -53,18 +59,22 @@ int Jeu::lancer()
         App->Close();
     }
 
-    Pathfinder pathfinder(map.get_tableau_cases(), map.getL(), map.getH(), 40);
+    Pathfinder pathfinder(map.get_tableau_cases(), map.getL(), map.getH(), 40, &map);
 
     ZombiManager* zombiManager = new ZombiManager(&map);
 
     sf::Font MyFont;
     MyFont.LoadFromFile("fonts/verdana.ttf", 50);
 
+    double ElapsedTime1;
+
      // Boucle principale
     while (App->IsOpened())
     {
         //zombiManager->afficher_data();
         App->Clear();
+
+        App->SetView(View1);
 
         map.afficher(App);
 
@@ -99,7 +109,9 @@ int Jeu::lancer()
 
                     xMousePressed = xMouse;
                     yMousePressed = yMouse;
-                    zombiManager->set_destination_to_active_zombies(xMousePressed,yMousePressed,App,&pathfinder);
+
+                    zombiManager->set_destination_to_active_zombies(xMousePressed+View1.GetRect().Left,yMousePressed+View1.GetRect().Top,App,&pathfinder);
+
                 }
             }
             if (Event.Type == sf::Event::MouseButtonReleased && Event.MouseButton.Button == 0)
@@ -116,6 +128,38 @@ int Jeu::lancer()
         {
             return 2;
         }
+
+        if (App->GetInput().IsKeyDown(sf::Key::Right))
+        {
+            if(View1.GetRect().Right+10 <= map.getL()*map.getTailleCase())
+            {
+                View1.Move(10.0f,0);
+            }
+        }
+
+        if (App->GetInput().IsKeyDown(sf::Key::Left))
+        {
+            if(View1.GetRect().Left-10 >= 0)
+            {
+                View1.Move(-10.0f,0);
+            }
+        }
+        if (App->GetInput().IsKeyDown(sf::Key::Up))
+        {
+            if(View1.GetRect().Top-10 >= 0)
+            {
+                View1.Move(0,-10.0f);
+            }
+        }
+
+        if (App->GetInput().IsKeyDown(sf::Key::Down))
+        {
+            if(View1.GetRect().Bottom+10 <= map.getH()*map.getTailleCase())
+            {
+                View1.Move(0,10.0f);
+            }
+        }
+
 
         // Gestion du temps
          ElapsedTime = App->GetFrameTime();
@@ -140,7 +184,7 @@ int Jeu::lancer()
 
         if(xMousePressed != -1 && xMouseReleased != -1)
         {
-            zombiManager->detecte_selection(xMousePressed,yMousePressed,xMouseReleased,yMouseReleased);
+            zombiManager->detecte_selection(xMousePressed+View1.GetRect().Left,yMousePressed+View1.GetRect().Top,xMouseReleased+View1.GetRect().Left,yMouseReleased+View1.GetRect().Top);
             xMousePressed = -1;
             yMousePressed = -1;
             xMouseReleased = -1;
@@ -150,16 +194,13 @@ int Jeu::lancer()
         zombiManager->iteration_vie_zombi(ElapsedTime);
 
         // Clear screen
-
-
         zombiManager->afficher(App);
 
         if(mouse_selection)
         {
-            rectangle_selection = sf::Shape::Rectangle(xMousePressed_temp,yMousePressed_temp,xMouse,yMouse,background,2,border);
+            rectangle_selection = sf::Shape::Rectangle(xMousePressed_temp+View1.GetRect().Left,yMousePressed_temp+View1.GetRect().Top,xMouse+View1.GetRect().Left,yMouse+View1.GetRect().Top,background,2,border);
             App->Draw(rectangle_selection);
         }
-
 
         // Display window contents on screen
         App->Display();

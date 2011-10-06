@@ -1,4 +1,5 @@
 #include "pathfinder.hpp"
+#include <limits>
 
 
 #define NBRE_MAX_ITERATION 500
@@ -28,12 +29,13 @@ bool operator!=(Point const& a, Point const& b)
     }
 }
 
-Pathfinder::Pathfinder(vector<int> carte_, int largeur_, int hauteur_, int taille_case_)
+Pathfinder::Pathfinder(vector<int> carte_, int largeur_, int hauteur_, int taille_case_,Map* map_)
 {
     carte = carte_;
     largeur = largeur_;
     hauteur = hauteur_;
     taille_case = taille_case_;
+    map = map_;
 }
 
 bool Pathfinder::contient(vector<Point> tableau,int x,int y)
@@ -70,6 +72,11 @@ bool Pathfinder::existe_pas_dans_vector(int x, int y,vector<Point> points_deja_v
 
 vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
 {
+    sf::Clock Clock;
+    Clock.Reset();
+    cout.precision( numeric_limits<double>::digits10 + 50);
+
+    //cout << "temps ecoule au demarrage                        : " << Clock.GetElapsedTime() << endl;
     int x = 0;
     int y = 0;
 
@@ -79,6 +86,10 @@ vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
     Case minimum(9999,9999);
 
     //on met une valeur de -1 à toutes les cases de la carte_distance afin de signaler qu'elles n'ont pas encore été traitées.
+    //double ElapsedTime1,ElapsedTime2;
+
+    //ElapsedTime1 = App->GetFrameTime();
+
     for(x=0;x<((int)carte.size());x++)
     {
         carte_distances.push_back(Case());
@@ -87,9 +98,13 @@ vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
         carte_distances[x].H = -1;
     }
 
+    //cout << "temps ecoule apres initialisation a -1           : " << Clock.GetElapsedTime() << endl;
+
+    //ElapsedTime2 = App->GetFrameTime();
+
+
 
     //initialisation de la première case
-
     carte_distances[depart.x + depart.y*largeur].H = distance_entre_2_point(depart,arrivee);
     carte_distances[depart.x + depart.y*largeur].G = 0;
     carte_distances[depart.x + depart.y*largeur].F = carte_distances[depart.x + depart.y*largeur].G + carte_distances[depart.x + depart.y*largeur].H;
@@ -139,6 +154,8 @@ vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
 
     int nombre_iterations = 0;
 
+    //cout << "temps ecoule au debut de la boucle               : " << Clock.GetElapsedTime() << endl;
+
     while(nombre_iterations < NBRE_MAX_ITERATION && actuel != arrivee)
     {
         //on initialise le point minimum à une grande valeur, supérieure au maximum possible sur la map
@@ -149,27 +166,37 @@ vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
         {
             for(y=0;y<hauteur;y++)
             {
-                if(minimum.F > carte_distances[x + y*largeur].F && carte_distances[x + y*largeur].F != -1)
+                //optimisation
+                if(carte_distances[x + y*largeur].F != -1)
                 {
-                        if(existe_pas_dans_vector(x,y,points_deja_verifies))
-                        {
-                            //cout << "Nouveau minimum "<< x << ", " << y << " : " << carte_distances[x + y*largeur].F << endl;
-                            minimum = carte_distances[x + y*largeur];
-                            point_temp.x = x;
-                            point_temp.y = y;
-                        }
-                        else
-                        {
-                            //cout << "Case  : " << x << ", " << y << " deja verifiee." << endl;
-                        }
+                    if(minimum.F > carte_distances[x + y*largeur].F)
+                    {
+                            if(existe_pas_dans_vector(x,y,points_deja_verifies))
+                            {
+                                //cout << "Nouveau minimum "<< x << ", " << y << " : " << carte_distances[x + y*largeur].F << endl;
+                                minimum = carte_distances[x + y*largeur];
+                                point_temp.x = x;
+                                point_temp.y = y;
+                            }
+                            /*
+                            else
+                            {
+                                cout << "Case  : " << x << ", " << y << " deja verifiee." << endl;
+                            }
+                            */
 
+                    }
                 }
+                /*
                 else
                 {
-                    //cout << "F trop elve sur case  : " << x << ", " << y << " : " << carte_distances[x + y*hauteur].F << endl;
+                    cout << "F trop elve sur case  : " << x << ", " << y << " : " << carte_distances[x + y*hauteur].F << endl;
                 }
+                */
             }
         }
+
+
 
         points_deja_verifies.push_back(point_temp);
         actuel = point_temp;
@@ -182,10 +209,23 @@ vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
             {
                 //si c'est dans la map
                 //cout << "Checking de la case autour : " << actuel.x + (x-1) << ", " << (actuel.y + (y-1)) << "(" << (actuel.x + (x-1) + ((actuel.y + (y-1))*largeur)) << ")" <<endl;
-                if(actuel.x + (x-1) < largeur && actuel.x + (x-1) > -1 && actuel.y + (y-1) < hauteur && actuel.y + (y-1) > -1 && carte[actuel.x + (x-1) + ((actuel.y + (y-1))*largeur)] != 1)
+                /*
+                if((!(x == 1 && y == 1 )) && (!(x == 0 && y == 0 )) && (!(x == 2 && y == 0 )) && (!(x == 0 && y == 2 )) && (!(x == 2 && y == 2 )))
                 {
-                    if((!(x == 1 && y == 1 )) && (!(x == 0 && y == 0 )) && (!(x == 2 && y == 0 )) && (!(x == 0 && y == 2 )) && (!(x == 2 && y == 2 )))
+                */
+                //on parcourt aussi les diagonales si elle ne pose pas de soucis de collision
+                if(
+                    //en haut a gauche on vérifie la case au dessus et a gauche
+                    (x == 0 && y == 0 && carte[actuel.x-1 + actuel.y*largeur] != 1 && carte[actuel.x + actuel.y-1*largeur] != 1 ) ||
+                    (x == 2 && y == 2 && carte[actuel.x+1 + actuel.y*largeur] != 1 && carte[actuel.x + actuel.y+1*largeur] != 1 ) ||
+                    (x == 0 && y == 2 && carte[actuel.x-1 + actuel.y*largeur] != 1 && carte[actuel.x + actuel.y+1*largeur] != 1 ) ||
+                    (x == 2 && y == 0 && carte[actuel.x+1 + actuel.y*largeur] != 1 && carte[actuel.x + actuel.y-1*largeur] != 1 ) ||
+                    ((!(x == 1 && y == 1 )) && (!(x == 0 && y == 0 )) && (!(x == 2 && y == 0 )) && (!(x == 0 && y == 2 )) && (!(x == 2 && y == 2 )))
+                   )
+                   {
+                    if(actuel.x + (x-1) < largeur && actuel.x + (x-1) > -1 && actuel.y + (y-1) < hauteur && actuel.y + (y-1) > -1 && carte[actuel.x + (x-1) + ((actuel.y + (y-1))*largeur)] != 1)
                     {
+
                         //cout << "a " << endl;
                         point_temp.x = actuel.x + (x-1);
                         point_temp.y = actuel.y + (y-1);
@@ -197,28 +237,39 @@ vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
                             carte_distances[point_temp.x + point_temp.y*largeur].set_parent(actuel.x,actuel.y);
                             //cout << "nouveau parent pour " << point_temp.x  << ", " << point_temp.y << " : " << actuel.x << ", " << actuel.y << endl;
                         }
+                        /*
                         else
                         {
                             //cout << carte_distances[point_temp.x + point_temp.y*hauteur].G << " < " << (carte_distances[actuel.x + actuel.y*hauteur].G + distance_entre_2_point(actuel,point_temp)) << endl;
                             //cout << "pas de nouvelles valeurs pour " << point_temp.x  << ", " << point_temp.y << " G: "<< carte_distances[point_temp.x + point_temp.y*largeur].G << ", H: "<< carte_distances[point_temp.x + point_temp.y*largeur].H << ", F:" << carte_distances[point_temp.x + point_temp.y*largeur].F<< endl;
                         }
+                        */
                     }
+                    /*
                     else
                     {
-                        //cout << "case diagonale. " << endl;
+                        cout << actuel.x + (x-1) << "," << actuel.y + (y-1) << " est hors map ou est un mur." << endl;
                     }
+                    */
                 }
+                /*
                 else
                 {
-                    //cout << actuel.x + (x-1) << "," << actuel.y + (y-1) << " est hors map ou est un mur." << endl;
+                    cout << "case diagonale. " << endl;
                 }
+                */
                 //cout << "Fin de checking de la case autour : " << actuel.x + (x-1) << ", " << (actuel.y + (y-1)) << "(" << (actuel.x + (x-1) + ((actuel.y + (y-1))*largeur)) << ")" <<endl;
             }
         }
         //cout << "Fin d'iteration, retour a la recherche de minimum." ;
         nombre_iterations++;
+
         //cout << " iterations : " << nombre_iterations << endl;
     }
+
+    //cout << "Nombre d'iteration                               : " << nombre_iterations << endl;
+    //cout << "temps ecoule par iteration                       : " << Clock.GetElapsedTime()/nombre_iterations << endl;
+    //cout << "temps ecoule pour trouver le path                : " << Clock.GetElapsedTime() << endl;
 
 
     //si on a trouvé une route
@@ -236,6 +287,8 @@ vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
         }
         parcourt.push_back(depart);
     }
+
+    //cout << "temps ecoule pour recomposer le path             : " << Clock.GetElapsedTime() << endl;
 
     //cout << "Fin de recomposition du parcourt." << endl;
 
@@ -319,7 +372,7 @@ vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
                     x6 = x2 - a;
                     y6 = y2 - b;
                 }
-
+                //optimisation on utilise que les 2 lignes exterieures :: if((!traverse_mur(x1,y1,x2,y2))&&(!traverse_mur(x3,y3,x4,y4))&&(!traverse_mur(x5,y5,x6,y6)))
                 if((!traverse_mur(x1,y1,x2,y2))&&(!traverse_mur(x3,y3,x4,y4))&&(!traverse_mur(x5,y5,x6,y6)))
                 {
                     //cout << "Pas de mur entre le repere " << parcourt[repere_precedent].x << ", " << parcourt[repere_precedent].y << " et la case  " << parcourt[z-1].x << ", " << parcourt[z-1].y << endl;
@@ -357,6 +410,10 @@ vector<Point> Pathfinder::calcul_path(Point depart,Point arrivee)
         }
     }
 
+     cout << "temps ecoule pour simplifier le path             : " << Clock.GetElapsedTime() << endl;
+
+    //cout << "Fin de fonction : " << App->GetFrameTime() << endl;
+    //cout << "Fin de fonction : " << (ElapsedTime1-App->GetFrameTime()) << endl;
     return parcourt;
 }
 
@@ -378,62 +435,66 @@ bool Pathfinder::traverse_mur(float x1,float y1,float x2,float y2)
 
     float x,y;
 
-    for(int i=0;i<hauteur;i++)
+    vector<Point> liste_mur;
+    liste_mur = map->get_liste_mur();
+    int size = liste_mur.size();
+    for(int a=0; a<size;a++)
     {
-        for(int j=0;j<largeur;j++)
+        int i =  liste_mur[a].y;
+        int j =  liste_mur[a].x;
+
+        y = i * taille_case;
+        x = j * taille_case;
+
+        //si c'est un mur
+        if(carte[(j)+i*largeur] == 1)
         {
-            y = i * taille_case;
-            x = j * taille_case;
-
-            //si c'est un mur
-            if(carte[(j)+i*largeur] == 1)
+            //cout << "case " << i << ", " << j << "(" <<((i)+j*largeur) << ") est un  mur."<< endl;
+            //il y a possibilité de chevauchement
+            if(x1 <= x+taille_case && x2 >= x)
             {
-                //cout << "case " << i << ", " << j << "(" <<((i)+j*largeur) << ") est un  mur."<< endl;
-                //il y a possibilité de chevauchement
-                if(x1 <= x+taille_case && x2 >= x)
+                float x_min=x;
+                float x_max=x+taille_case;
+
+                //cout << "possibilite de chevauchement entre : " << x_min << ", et : " << x_max << endl;
+
+                if(x1 > x)
                 {
-                    float x_min=x;
-                    float x_max=x+taille_case;
+                    x_min = x1;
+                }
 
-                    //cout << "possibilite de chevauchement entre : " << x_min << ", et : " << x_max << endl;
+                if(x2 < x+taille_case)
+                {
+                    x_max = x2;
+                }
 
-                    if(x1 > x)
-                    {
-                        x_min = x1;
-                    }
+                //cout << "entre : " << x_min << ", et : " << x_max << endl;
 
-                    if(x2 < x+taille_case)
-                    {
-                        x_max = x2;
-                    }
+                //il faut maintenant savoir la valeur de la droite en x_min et x_max
+                float y_min = y1+((y1 - y2)/(x1 - x2))*(x_min - x1);
+                float y_max = y1+((y1 - y2)/(x1 - x2))*(x_max - x1);
 
-                    //cout << "entre : " << x_min << ", et : " << x_max << endl;
-
-                    //il faut maintenant savoir la valeur de la droite en x_min et x_max
-                    float y_min = y1+((y1 - y2)/(x1 - x2))*(x_min - x1);
-                    float y_max = y1+((y1 - y2)/(x1 - x2))*(x_max - x1);
-
-                    if(x1 == x2)
-                    {
-                        y_min = y1;
-                        y_max = y2;
-                    }
+                if(x1 == x2)
+                {
+                    y_min = y1;
+                    y_max = y2;
+                }
 
 
-                    if((y_min > y+taille_case && y_max > y+taille_case) || (y_min < y && y_max < y))
-                    {
-
-                    }
-                    else
-                    {
-                        //cout << x1 << ", " << y1 << " -> " << x2 << ", " << y2 << " traverse un mur." << endl;
-                        return 1;
-                    }
+                if((y_min > y+taille_case && y_max > y+taille_case) || (y_min < y && y_max < y))
+                {
 
                 }
+                else
+                {
+                    //cout << x1 << ", " << y1 << " -> " << x2 << ", " << y2 << " traverse un mur." << endl;
+                    return 1;
+                }
+
             }
         }
     }
+
     //cout << x1 << ", " << y1 << " -> " << x2 << ", " << y2 << " ne traverse pas un mur." << endl;
     return 0;
 }

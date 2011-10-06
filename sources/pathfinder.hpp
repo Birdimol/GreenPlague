@@ -8,6 +8,7 @@
 
 #include "point.hpp"
 #include "case.hpp"
+#include "map.hpp"
 
 using namespace std;
 
@@ -26,8 +27,8 @@ class Pathfinder
     bool traverse_mur(float x1,float y1,float x2,float y2);
 
     public :
-    Pathfinder(vector<int> carte, int largeur, int hauteur, int taille_case);
-
+    Pathfinder(vector<int> carte, int largeur, int hauteur, int taille_case, Map* map);
+    Map* map;
     //Envoyer les cases !
     vector<Point> calcul_path(Point depart,Point arrivee);
     bool contient(vector<Point> tableau,int x,int y);

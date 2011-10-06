@@ -10,6 +10,7 @@ Map::Map(string FileName)
 {
     string completeFileName = "maps/" + FileName + ".gpm";
     ifstream fichier(completeFileName.c_str(), ios::in);
+    Point temporaire;
     if(fichier)  // si l'ouverture a réussi
     {
         error_happened = false;
@@ -47,7 +48,9 @@ Map::Map(string FileName)
                 {
                     sdalle[i*largeur+j].SetImage(imur);
                     tableau_cases.push_back(1);
-
+                    temporaire.x = j;
+                    temporaire.y = i;
+                    liste_mur.push_back(temporaire);
                 }
                 else if(strToInt(variable_temp)==0)
                 {
@@ -109,6 +112,11 @@ int Map::strToInt(string chaine)
     int temp;
     ss >> temp;
     return temp;
+}
+
+vector<Point> Map::get_liste_mur()
+{
+    return liste_mur;
 }
 
 Point Map::getCaseLibreProche(Point point,vector<Point> liste_case_occupee)

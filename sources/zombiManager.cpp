@@ -1,5 +1,6 @@
 #include "zombiManager.hpp"
 #include "tools.cpp"
+#include <limits>
 
 
 using namespace std;
@@ -32,6 +33,9 @@ void ZombiManager::detecte_selection(int xMousePressed,int yMousePressed,int xMo
 
 void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMousePressed,sf::RenderWindow* App, Pathfinder* pathfinder)
 {
+
+
+
     int temp = tableau_zombi.size();
 
     vector<int> liste_x;
@@ -126,7 +130,6 @@ void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMous
             }
 
             //si on a trouve une destination acceptable
-            cout << "destination : " << arrivee_reelle.x << ", " << arrivee_reelle.y << endl;
             if(accessible)
             {
                 depart.x = tableau_zombi[i]->getSprite().GetPosition().x/map->getTailleCase();
@@ -136,7 +139,8 @@ void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMous
 
                 if(((int)parcourt.size()) > 0)
                 {
-                    for(int j=0;j<((int)parcourt.size()); j++)
+                    //on ne tient pas compte de la derniere case du parcourt car il s'agit de celle sur laquelle est le zombie actuellement
+                    for(int j=0;j<((int)parcourt.size()-1); j++)
                     {
                         if(j==0)
                         {
@@ -171,6 +175,8 @@ void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMous
             }
         }
     }
+
+
 }
 
 void ZombiManager::iteration_vie_zombi(float ElapsedTime)
