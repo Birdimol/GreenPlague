@@ -31,86 +31,25 @@ void ZombiManager::detecte_selection(int xMousePressed,int yMousePressed,int xMo
 
 }
 
-void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMousePressed,sf::RenderWindow* App, Pathfinder* pathfinder)
+void ZombiManager::start_movement_for_zombies(Pathfinder* pathfinder)
 {
-
-
 
     int temp = tableau_zombi.size();
 
-    vector<int> liste_x;
-    vector<int> liste_y;
     vector<Point> parcourt;
-
-    Point depart;
-    Point arrivee;
 
     for(int i=0; i<temp; i++)
     {
-        if(tableau_zombi[i]->getCible())
+        //si ce zombie est en attente, on lui calcule son path et on sort de la boucle
+        if(tableau_zombi[i]->is_waiting_for_path())
         {
-            liste_x.push_back(tableau_zombi[i]->getSprite().GetPosition().x);
-            liste_y.push_back(tableau_zombi[i]->getSprite().GetPosition().y);
-        }
-    }
-
-    /*
-    float moyenne_x = 0;
-    float moyenne_y = 0;
-
-    int nombre_total = liste_x.size();
-
-    for(int z=0;z<nombre_total;z++)
-    {
-        moyenne_x+=liste_x[z];
-    }
-
-    for(int z=0;z<nombre_total;z++)
-    {
-        moyenne_y+=liste_y[z];
-    }
-
-    moyenne_x = moyenne_x/nombre_total;
-    moyenne_y = moyenne_y/nombre_total;
-
-    float difference_x = moyenne_x - xMousePressed;
-    float difference_y = moyenne_y - yMousePressed;
-
-    float droite_x = difference_y;
-    float droite_y = -difference_x;
-
-    float rapportxy = droite_y/droite_x;
-    float distance_x_entre_destination = 20 / sqrt(rapportxy*rapportxy + 1);
-    float distance_y_entre_destination = distance_x_entre_destination * rapportxy;
-
-    sf::Color border(0,200,0,255);
-    sf::Shape line = sf::Shape::Line(moyenne_x,moyenne_y, xMousePressed, yMousePressed, 3, border);
-
-    sf::Color border2(255,200,0,255);
-    sf::Shape line2 = sf::Shape::Line(xMousePressed+distance_x_entre_destination,yMousePressed+distance_y_entre_destination, xMousePressed-distance_x_entre_destination, yMousePressed-distance_y_entre_destination, 3, border);
-
-    App->Draw(line);
-    App->Draw(line2);
-
-    */
-
-    int nombre_zombies = get_nombre_zombis();
-
-    arrivee.x = xMousePressed/map->getTailleCase();
-    arrivee.y = yMousePressed/map->getTailleCase();
-
-    for(int i=0; i<nombre_zombies; i++)
-    {
-        Point arrivee_reelle = arrivee;
-
-        if(tableau_zombi[i]->getCible())
-        {
+            Point arrivee_reelle = tableau_zombi[i]->get_destination_memorisee();
 
             bool accessible = true;
             //si l'arrivee est un mur
-            if(map->estMur(arrivee))
+            if(map->estMur(arrivee_reelle))
             {
-                arrivee_reelle = map->getCaseLibreProche(arrivee,map->get_liste_case_occupee());
+                arrivee_reelle = map->getCaseLibreProche(arrivee_reelle,map->get_liste_case_occupee());
                 if(arrivee_reelle.x == -1)
                 {
                     //pas de destination trouvee
@@ -129,12 +68,12 @@ void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMous
                 }
             }
 
+            //on va regarder s'il y a un mur entre le zombie et sa destination car s'il n'y a pas de mur, il est inutile de se prendre la tete avec le path !
+
             //si on a trouve une destination acceptable
             if(accessible)
             {
-                depart.x = tableau_zombi[i]->getSprite().GetPosition().x/map->getTailleCase();
-                depart.y = tableau_zombi[i]->getSprite().GetPosition().y/map->getTailleCase();
-
+                Point depart(tableau_zombi[i]->getSprite().GetPosition().x/map->getTailleCase(),tableau_zombi[i]->getSprite().GetPosition().y/map->getTailleCase());
                 parcourt = pathfinder->calcul_path(depart,arrivee_reelle);
 
                 if(((int)parcourt.size()) > 0)
@@ -151,7 +90,7 @@ void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMous
                             if(tableau_zombi[i]->get_final_destination().x != -1)
                             {
                                 Point temporaire(tableau_zombi[i]->get_final_destination().x,tableau_zombi[i]->get_final_destination().y);
-                                 map->delete_liste_case_occupee(temporaire);
+                                map->delete_liste_case_occupee(temporaire);
                             }
 
                             tableau_zombi[i]->set_cible_du_zombie(parcourt[j].x*map->getTailleCase()+map->getTailleCase()/2,parcourt[j].y*map->getTailleCase()+map->getTailleCase()/2);
@@ -161,26 +100,47 @@ void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMous
                             tableau_zombi[i]->add_cible_du_zombie(parcourt[j].x*map->getTailleCase()+map->getTailleCase()/2,parcourt[j].y*map->getTailleCase()+map->getTailleCase()/2);
                         }
                     }
+                    arrivee_reelle = parcourt[0];
                     //cout << "Ajout du point : " << arrivee_reelle.x <<", "<<arrivee_reelle.y << " dans la liste des cases occuppees."<< endl;
                     map->add_liste_case_occupee(arrivee_reelle);
                 }
-                else
-                {
-                    //on ne bouge pas
-                }
             }
-            else
-            {
-                //on ne bouge pas
-            }
+
+            //ce zombie n'a plus besoin de calculer son path
+            tableau_zombi[i]->stop_wait_for_path();
+
+            //on sort de la boucle
+            i = temp*2;
         }
     }
 
+}
 
+void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMousePressed)
+{
+    int temp = tableau_zombi.size();
+
+    vector<int> liste_x;
+    vector<int> liste_y;
+
+    Point depart;
+    Point arrivee;
+
+    arrivee.x = xMousePressed/map->getTailleCase();
+    arrivee.y = yMousePressed/map->getTailleCase();
+
+    for(int i=0; i<temp; i++)
+    {
+        if(tableau_zombi[i]->getCible())
+        {
+            tableau_zombi[i]->set_wait_for_path(arrivee);
+        }
+    }
 }
 
 void ZombiManager::iteration_vie_zombi(float ElapsedTime)
 {
+
     int temp = tableau_zombi.size();
     for(int i=0; i<temp; i++)
     {

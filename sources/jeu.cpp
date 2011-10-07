@@ -24,8 +24,6 @@ int Jeu::lancer()
     sf::Vector2f HalfSize(400, 300);
     sf::View View1(Center, HalfSize);
 
-
-
     sf::Color background(0,0,0,0);
     sf::Color border(0,200,0,255);
 
@@ -65,8 +63,6 @@ int Jeu::lancer()
 
     sf::Font MyFont;
     MyFont.LoadFromFile("fonts/verdana.ttf", 50);
-
-    double ElapsedTime1;
 
      // Boucle principale
     while (App->IsOpened())
@@ -110,7 +106,7 @@ int Jeu::lancer()
                     xMousePressed = xMouse;
                     yMousePressed = yMouse;
 
-                    zombiManager->set_destination_to_active_zombies(xMousePressed+View1.GetRect().Left,yMousePressed+View1.GetRect().Top,App,&pathfinder);
+                    zombiManager->set_destination_to_active_zombies(xMousePressed+View1.GetRect().Left,yMousePressed+View1.GetRect().Top);
 
                 }
             }
@@ -185,13 +181,15 @@ int Jeu::lancer()
         if(xMousePressed != -1 && xMouseReleased != -1)
         {
             zombiManager->detecte_selection(xMousePressed+View1.GetRect().Left,yMousePressed+View1.GetRect().Top,xMouseReleased+View1.GetRect().Left,yMouseReleased+View1.GetRect().Top);
-            xMousePressed = -1;
-            yMousePressed = -1;
+            xMousePressed  = -1;
+            yMousePressed  = -1;
             xMouseReleased = -1;
             yMouseReleased = -1;
         }
 
         zombiManager->iteration_vie_zombi(ElapsedTime);
+
+        zombiManager->start_movement_for_zombies(&pathfinder);
 
         // Clear screen
         zombiManager->afficher(App);

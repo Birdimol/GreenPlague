@@ -30,11 +30,17 @@ class Zombi
     void set_cible_du_zombie(int x, int y);
     void add_cible_du_zombie(int x, int y);
     Point get_final_destination();
+    bool is_waiting_for_path();
+    void stop_wait_for_path();
+    void set_wait_for_path(Point destination);
+    Point get_destination_memorisee();
+
     //void recevoirDegats(int nbDegats);
     //void attaquer(Personnage &cible);
     //bool estVivant();
 
     private:
+    bool wait_for_path;
     Map *map;
     int rotation;
     int vie;
@@ -46,6 +52,7 @@ class Zombi
     float difference_angle;
     float distance;
     float vitesse;
+    Point destination_memorisee;
 
     bool cible;
     int etat;

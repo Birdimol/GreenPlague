@@ -25,7 +25,8 @@ class ZombiManager
     void iteration_vie_zombi(float ElapsedTime);
     bool balle_touche_zombi(float x, float y);
     int get_nombre_zombis();
-    void set_destination_to_active_zombies(int xMousePressed,int yMousePressed,sf::RenderWindow* App, Pathfinder* pathfinder);
+    void set_destination_to_active_zombies(int xMousePressed,int yMousePressed);
+    void start_movement_for_zombies(Pathfinder* pathfinder);
 
     private:
     vector<Zombi*> tableau_zombi;

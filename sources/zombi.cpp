@@ -33,6 +33,8 @@ Zombi::Zombi(Map *map_envoyee, int x, int y)
         rotation = 0;
 
         cible = 0;
+
+        wait_for_path = false;
     }
 }
 
@@ -47,6 +49,27 @@ void Zombi::set_cible_du_zombie(int x, int y)
     cible_y.clear();
     cible_x.push_back(x);
     cible_y.push_back(y);
+}
+
+void Zombi::set_wait_for_path(Point destination)
+{
+    wait_for_path = true;
+    destination_memorisee = destination;
+}
+
+void Zombi::stop_wait_for_path()
+{
+    wait_for_path = false;
+}
+
+Point Zombi::get_destination_memorisee()
+{
+    return destination_memorisee;
+}
+
+bool Zombi::is_waiting_for_path()
+{
+    return wait_for_path;
 }
 
 void Zombi::add_cible_du_zombie(int x, int y)

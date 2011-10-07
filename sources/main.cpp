@@ -8,28 +8,20 @@
 #include <iostream>
 #include <vector>
 #include <SFML/Graphics.hpp>
-/*
-#include "Player.hpp"
-#include "zombi.hpp"
-#include "zombiManager.hpp"
-#include "balle.hpp"
-#include "map.hpp"
-#include "jeu.hpp"
-*/
 
 #include "ecranAccueil.hpp"
 #include "tools.cpp"
+#include <limits>
 
 using namespace std;
-
-
-
 
 int main()
 {
     // Create the main rendering window
     sf::RenderWindow App(sf::VideoMode(800, 600, 32), "GreenPlague");
     App.SetFramerateLimit(60);
+
+    cout.precision( numeric_limits<double>::digits10 + 50);
 
     EcranAccueil ecranAccueil(&App);
 
