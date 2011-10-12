@@ -256,7 +256,7 @@ void ZombiManager::set_visibility()
 
             map->set_visible(posx+1,posy-2);
             map->set_visible(posx,posy-2);
-            map->set_visible(posx+1,posy-2);
+            map->set_visible(posx-1,posy-2);
 
             map->set_visible(posx+2,posy-3);
             map->set_visible(posx+1,posy-3);
@@ -267,8 +267,8 @@ void ZombiManager::set_visibility()
             map->set_visible(posx-2,posy-4);
             map->set_visible(posx-1,posy-4);
             map->set_visible(posx,posy-4);
-            map->set_visible(posx-1,posy-4);
-            map->set_visible(posx-2,posy-4);
+            map->set_visible(posx+1,posy-4);
+            map->set_visible(posx+2,posy-4);
         }
         else if(tableau_zombi[i]->getSprite().GetRotation() <= 157.5 && tableau_zombi[i]->getSprite().GetRotation() > 112.5)
         {
