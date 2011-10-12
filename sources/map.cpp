@@ -30,6 +30,7 @@ Map::Map(string FileName)
         taille_case = 40;
 
         idalle.LoadFromFile("pictures/dalle.png");
+        idalle_non_visible.LoadFromFile("pictures/dalle_non_visible.png");
         imur.LoadFromFile("pictures/mur.png");
 
         cout << largeur << ", " << hauteur << endl;
@@ -43,6 +44,9 @@ Map::Map(string FileName)
                 variable_temp = ligneLue.substr(j,1);
                 sf::Sprite* temp = new sf::Sprite();
                 sdalle.push_back(*temp);
+
+                //toutes les cases sont invisibles par défaut.
+                tableau_cases_visible.push_back(0);
 
                 if(strToInt(variable_temp) == 1)
                 {
@@ -331,8 +335,48 @@ void Map::afficher(sf::RenderWindow* App)
         for(int j=0;j<largeur;j++)
         {
             x = j * taille_case;
-            sdalle[(i*largeur)+j].SetPosition(x,y);
-            App->Draw(sdalle[(i*largeur)+j]);
+            if(tableau_cases[(i*largeur)+j] == 1)
+            {
+                sdalle[(i*largeur)+j].SetPosition(x,y);
+                App->Draw(sdalle[(i*largeur)+j]);
+            }
+            else if(tableau_cases_visible[(i*largeur)+j] == 1)
+            {
+                sdalle[(i*largeur)+j].SetImage(idalle);
+                sdalle[(i*largeur)+j].SetPosition(x,y);
+                App->Draw(sdalle[(i*largeur)+j]);
+            }
+            else
+            {
+                sdalle[(i*largeur)+j].SetImage(idalle_non_visible);
+                sdalle[(i*largeur)+j].SetPosition(x,y);
+                App->Draw(sdalle[(i*largeur)+j]);
+            }
         }
+    }
+}
+
+void Map::set_visible(Point a)
+{
+    if(a.x < largeur && a.y < hauteur)
+    {
+        tableau_cases_visible[(a.y*largeur)+a.x] = 1;
+    }
+}
+
+void Map::reset_visible()
+{
+    int size = tableau_cases_visible.size();
+    for(int i =0; i<size; i++)
+    {
+        tableau_cases_visible[i] = 0;
+    }
+}
+
+void Map::set_visible(int x, int y)
+{
+    if(x < largeur && y < hauteur)
+    {
+        tableau_cases_visible[(y*largeur)+x] = 1;
     }
 }

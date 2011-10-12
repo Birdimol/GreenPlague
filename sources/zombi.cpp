@@ -349,5 +349,10 @@ void Zombi::avancer(float ElapsedTime)
     }
 }
 
+float Zombi::getRotation()
+{
+    cout << rotation <<endl;
+    return rotation;
+}
 
 

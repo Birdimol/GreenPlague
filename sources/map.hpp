@@ -30,17 +30,22 @@ class Map
     Point getCaseLibreProche(Point point, vector<Point> liste_case_occupee);
     vector<Point> get_liste_case_occupee();
     vector<Point> get_liste_mur();
+    void set_visible(Point a);
+    void set_visible(int x, int y);
+    void reset_visible();
     void add_liste_case_occupee(Point a);
     void delete_liste_case_occupee(Point a);
 
     private:
     vector<int> tableau_cases;
+    vector<int> tableau_cases_visible;
     vector<Point> tableau_zombie;
     vector<Point> liste_mur;
     int largeur;
     int hauteur;
     sf::Image idalle;
     sf::Image imur;
+    sf::Image idalle_non_visible;
     vector<sf::Sprite> sdalle;
     vector<Point> liste_case_occupee;
     int taille_case;

@@ -27,6 +27,7 @@ class ZombiManager
     int get_nombre_zombis();
     void set_destination_to_active_zombies(int xMousePressed,int yMousePressed);
     void start_movement_for_zombies(Pathfinder* pathfinder);
+    void set_visibility();
 
     private:
     vector<Zombi*> tableau_zombi;

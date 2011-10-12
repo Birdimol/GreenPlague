@@ -26,6 +26,7 @@ class Zombi
     bool detecter_joueur();
     void definir_cible();
     bool est_dans_rectangle(int xMousePressed,int yMousePressed,int xMouseReleased,int yMouseReleased);
+    float getRotation();
     bool getCible();
     void set_cible_du_zombie(int x, int y);
     void add_cible_du_zombie(int x, int y);

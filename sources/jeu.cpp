@@ -72,6 +72,10 @@ int Jeu::lancer()
 
         App->SetView(View1);
 
+        map.reset_visible();
+
+        zombiManager->set_visibility();
+
         map.afficher(App);
 
         // Detections events
