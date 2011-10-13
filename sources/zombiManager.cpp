@@ -197,21 +197,31 @@ void ZombiManager::set_visibility()
     int temp = tableau_zombi.size();
     for(int i=0; i<temp; i++)
     {
-        cout <<tableau_zombi[i]->getSprite().GetRotation() << endl;
 
         int posx = floor(tableau_zombi[i]->getSprite().GetPosition().x/map->getTailleCase());
         int posy = floor(tableau_zombi[i]->getSprite().GetPosition().y/map->getTailleCase());
         if(tableau_zombi[i]->getSprite().GetRotation() <= 22.5 || tableau_zombi[i]->getSprite().GetRotation() > 337.5)
         {
+            //droite
+            map->set_visible(posx-1,posy+1);
+            map->set_visible(posx-1,posy);
+            map->set_visible(posx-1,posy-1);
+
+            map->set_visible(posx,posy+1);
             map->set_visible(posx,posy);
+            map->set_visible(posx,posy-1);
 
             map->set_visible(posx+1,posy-1);
             map->set_visible(posx+1,posy);
             map->set_visible(posx+1,posy+1);
 
+
+
+            map->set_visible(posx+2,posy-2);
             map->set_visible(posx+2,posy-1);
             map->set_visible(posx+2,posy);
             map->set_visible(posx+2,posy+1);
+            map->set_visible(posx+2,posy+2);
 
             map->set_visible(posx+3,posy-2);
             map->set_visible(posx+3,posy-1);
@@ -227,7 +237,16 @@ void ZombiManager::set_visibility()
         }
         else if(tableau_zombi[i]->getSprite().GetRotation() <= 67.5 && tableau_zombi[i]->getSprite().GetRotation() > 22.5)
         {
+            //haut droite
+            map->set_visible(posx-1,posy);
+            map->set_visible(posx-1,posy+1);
+            map->set_visible(posx,posy+1);
+
+            map->set_visible(posx+1,posy+1);
+            map->set_visible(posx-1,posy-1);
+
             map->set_visible(posx,posy);
+
             map->set_visible(posx+1,posy);
             map->set_visible(posx+2,posy);
             map->set_visible(posx,posy-1);
@@ -245,60 +264,266 @@ void ZombiManager::set_visibility()
             map->set_visible(posx+2,posy-3);
             map->set_visible(posx+3,posy-3);
             map->set_visible(posx+3,posy-2);
+
+            map->set_visible(posx,posy-3);
+            map->set_visible(posx+3,posy);
+
         }
         else if(tableau_zombi[i]->getSprite().GetRotation() <= 112.5 && tableau_zombi[i]->getSprite().GetRotation() > 67.5)
         {
+            //haut
+            map->set_visible(posx-1,posy+1);
+            map->set_visible(posx,posy+1);
+            map->set_visible(posx+1,posy+1);
+
+            map->set_visible(posx-1,posy);
             map->set_visible(posx,posy);
+            map->set_visible(posx+1,posy);
 
             map->set_visible(posx+1,posy-1);
             map->set_visible(posx,posy-1);
             map->set_visible(posx-1,posy-1);
 
-            map->set_visible(posx+1,posy-2);
-            map->set_visible(posx,posy-2);
-            map->set_visible(posx-1,posy-2);
+            float pixel_pos_x = posx*map->getTailleCase()+(map->getTailleCase()/2);
+            float pixel_pos_y = posy*map->getTailleCase()+(map->getTailleCase()/2);
 
-            map->set_visible(posx+2,posy-3);
-            map->set_visible(posx+1,posy-3);
-            map->set_visible(posx,posy-3);
-            map->set_visible(posx-1,posy-3);
-            map->set_visible(posx-2,posy-3);
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x+2*map->getTailleCase(),pixel_pos_y-2*map->getTailleCase()))
+            {
+                map->set_visible(posx+2,posy-2);
+            }
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x+map->getTailleCase(),pixel_pos_y-2*map->getTailleCase()))
+            {
+                map->set_visible(posx+1,posy-2);
+            }
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x,pixel_pos_y-2*map->getTailleCase()))
+            {
+                map->set_visible(posx,posy-2);
+            }
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x-map->getTailleCase(),pixel_pos_y-2*map->getTailleCase()))
+            {
+                map->set_visible(posx-1,posy-2);
+            }
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x-2*map->getTailleCase(),pixel_pos_y-2*map->getTailleCase()))
+            {
+                map->set_visible(posx-2,posy-2);
+            }
 
-            map->set_visible(posx-2,posy-4);
-            map->set_visible(posx-1,posy-4);
-            map->set_visible(posx,posy-4);
-            map->set_visible(posx+1,posy-4);
-            map->set_visible(posx+2,posy-4);
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x+2*map->getTailleCase(),pixel_pos_y-3*map->getTailleCase()))
+            {
+                map->set_visible(posx+2,posy-3);
+            }
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x+map->getTailleCase(),pixel_pos_y-3*map->getTailleCase()))
+            {
+                map->set_visible(posx+1,posy-3);
+            }
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x,pixel_pos_y-3*map->getTailleCase()))
+            {
+                map->set_visible(posx,posy-3);
+            }
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x-map->getTailleCase(),pixel_pos_y-3*map->getTailleCase()))
+            {
+                map->set_visible(posx-1,posy-3);
+            }
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x-2*map->getTailleCase(),pixel_pos_y-3*map->getTailleCase()))
+            {
+                map->set_visible(posx-2,posy-3);
+            }
+
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x-2*map->getTailleCase(),pixel_pos_y-4*map->getTailleCase()))
+            {
+                map->set_visible(posx-2,posy-4);
+            }
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x-map->getTailleCase(),pixel_pos_y-4*map->getTailleCase()))
+            {
+                map->set_visible(posx-1,posy-4);
+            }
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x,pixel_pos_y-4*map->getTailleCase()))
+            {
+                map->set_visible(posx,posy-4);
+            }
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x+map->getTailleCase(),pixel_pos_y-4*map->getTailleCase()))
+            {
+                map->set_visible(posx+1,posy-4);
+            }
+            if(!map->traverse_mur(pixel_pos_x,pixel_pos_y,pixel_pos_x+2*map->getTailleCase(),pixel_pos_y-4*map->getTailleCase()))
+            {
+                map->set_visible(posx+2,posy-4);
+            }
         }
         else if(tableau_zombi[i]->getSprite().GetRotation() <= 157.5 && tableau_zombi[i]->getSprite().GetRotation() > 112.5)
         {
+            //haut gauche
+            map->set_visible(posx+1,posy);
+            map->set_visible(posx+1,posy+1);
+            map->set_visible(posx,posy+1);
+
             map->set_visible(posx,posy);
+
+            map->set_visible(posx+1,posy+1);
             map->set_visible(posx-1,posy-1);
+            map->set_visible(posx-1,posy+1);
+
+            map->set_visible(posx-1,posy+1);
+            map->set_visible(posx+1,posy-1);
+
+            map->set_visible(posx-1,posy);
+            map->set_visible(posx-2,posy);
+            map->set_visible(posx,posy-1);
+            map->set_visible(posx,posy-2);
+
+            map->set_visible(posx-1,posy-1);
+            map->set_visible(posx-1,posy-2);
+            map->set_visible(posx-2,posy-1);
+
+            map->set_visible(posx-1,posy-3);
+            map->set_visible(posx-3,posy-1);
+
             map->set_visible(posx-2,posy-2);
+
+            map->set_visible(posx-2,posy-3);
+            map->set_visible(posx-3,posy-3);
+            map->set_visible(posx-3,posy-2);
+
+            map->set_visible(posx,posy-3);
+            map->set_visible(posx-3,posy);
         }
         else if(tableau_zombi[i]->getSprite().GetRotation() <= 202.5 && tableau_zombi[i]->getSprite().GetRotation() > 157.5)
         {
+            //gauche
+            map->set_visible(posx+1,posy+1);
+            map->set_visible(posx+1,posy);
+            map->set_visible(posx+1,posy-1);
+
+            map->set_visible(posx+1,posy-1);
+            map->set_visible(posx-1,posy+1);
+
             map->set_visible(posx,posy);
+            map->set_visible(posx,posy-1);
+            map->set_visible(posx,posy+1);
+
+            map->set_visible(posx-1,posy-1);
             map->set_visible(posx-1,posy);
+            map->set_visible(posx-1,posy+1);
+
+            map->set_visible(posx-2,posy-2);
+            map->set_visible(posx-2,posy-1);
             map->set_visible(posx-2,posy);
+            map->set_visible(posx-2,posy+1);
+            map->set_visible(posx-2,posy+2);
+
+            map->set_visible(posx-3,posy-2);
+            map->set_visible(posx-3,posy-1);
+            map->set_visible(posx-3,posy);
+            map->set_visible(posx-3,posy+1);
+            map->set_visible(posx-3,posy+2);
+
+            map->set_visible(posx-4,posy-2);
+            map->set_visible(posx-4,posy-1);
+            map->set_visible(posx-4,posy);
+            map->set_visible(posx-4,posy+1);
+            map->set_visible(posx-4,posy+2);
         }
         else if(tableau_zombi[i]->getSprite().GetRotation() <= 247.5 && tableau_zombi[i]->getSprite().GetRotation() > 202.5)
         {
+            //bas gauche
+            map->set_visible(posx+1,posy);
+            map->set_visible(posx+1,posy-1);
+            map->set_visible(posx,posy-1);
+
+            map->set_visible(posx+1,posy+1);
+            map->set_visible(posx-1,posy-1);
+
             map->set_visible(posx,posy);
+
+            map->set_visible(posx-1,posy);
+            map->set_visible(posx-2,posy);
+            map->set_visible(posx,posy+1);
+            map->set_visible(posx,posy+2);
+
             map->set_visible(posx-1,posy+1);
+            map->set_visible(posx-1,posy+2);
+            map->set_visible(posx-2,posy+1);
+
+            map->set_visible(posx-1,posy+3);
+            map->set_visible(posx-3,posy+1);
+
             map->set_visible(posx-2,posy+2);
+
+            map->set_visible(posx-3,posy);
+            map->set_visible(posx,posy+3);
+
+            map->set_visible(posx-2,posy+3);
+            map->set_visible(posx-3,posy+3);
+            map->set_visible(posx-3,posy+2);
         }
         else if(tableau_zombi[i]->getSprite().GetRotation() <= 292.5 && tableau_zombi[i]->getSprite().GetRotation() > 247.5)
         {
-            map->set_visible(posx,posy);
+            //bas
+            map->set_visible(posx-1,posy);
+            map->set_visible(posx-1,posy+1);
             map->set_visible(posx,posy+1);
+
+            map->set_visible(posx-1,posy-1);
+            map->set_visible(posx,posy-1);
+            map->set_visible(posx+1,posy-1);
+
+            map->set_visible(posx-1,posy);
+            map->set_visible(posx,posy);
+            map->set_visible(posx+1,posy);
+
+            map->set_visible(posx+1,posy+1);
+            map->set_visible(posx,posy+1);
+            map->set_visible(posx-1,posy+1);
+
+            map->set_visible(posx+2,posy+2);
+            map->set_visible(posx+1,posy+2);
             map->set_visible(posx,posy+2);
+            map->set_visible(posx-1,posy+2);
+            map->set_visible(posx-2,posy+2);
+
+            map->set_visible(posx+2,posy+3);
+            map->set_visible(posx+1,posy+3);
+            map->set_visible(posx,posy+3);
+            map->set_visible(posx-1,posy+3);
+            map->set_visible(posx-2,posy+3);
+
+            map->set_visible(posx-2,posy+4);
+            map->set_visible(posx-1,posy+4);
+            map->set_visible(posx,posy+4);
+            map->set_visible(posx+1,posy+4);
+            map->set_visible(posx+2,posy+4);
         }
         else
         {
+            //bas droite
+            map->set_visible(posx-1,posy);
+            map->set_visible(posx-1,posy-1);
+            map->set_visible(posx,posy-1);
+            map->set_visible(posx-1,posy+1);
+            map->set_visible(posx+1,posy-1);
+
             map->set_visible(posx,posy);
+
+            map->set_visible(posx+1,posy);
+            map->set_visible(posx+2,posy);
+            map->set_visible(posx,posy+1);
+            map->set_visible(posx,posy+2);
+
             map->set_visible(posx+1,posy+1);
+            map->set_visible(posx+1,posy+2);
+            map->set_visible(posx+2,posy+1);
+
+            map->set_visible(posx+1,posy+3);
+            map->set_visible(posx+3,posy+1);
+
             map->set_visible(posx+2,posy+2);
+
+            map->set_visible(posx+2,posy+3);
+            map->set_visible(posx+3,posy+3);
+            map->set_visible(posx+3,posy+2);
+
+            map->set_visible(posx+3,posy);
+            map->set_visible(posx,posy+3);
         }
     }
 }

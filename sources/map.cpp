@@ -225,30 +225,54 @@ bool Map::traverse_mur(float x1,float y1,float x2,float y2)
                 //il y a possibilité de chevauchement
                 if(x1 <= x+taille_case && x2 >= x)
                 {
-                    float x_min=x;
-                    float x_max=x+taille_case;
-
-                    if(x1 > x)
+                    if(x1 == x2)
                     {
-                        x_min = x1;
+                        if(y1 > y2)
+                        {
+                            float y_max = y1;
+                            float y_min = y2;
+
+                            if(y_min <= y+taille_case && y_max >= y)
+                            {
+                                return 1;
+                            }
+                        }
                     }
-
-                    if(x2 < x+taille_case)
+                    else if(y1 == y2)
                     {
-                        x_max = x2;
-                    }
+                        if(x1 > x2)
+                        {
+                            float x_max = x1;
+                            float x_min = x2;
 
-                    //il faut maintenant savoir la valeur de la droite en x_min et x_max
-                    float y_min = y1+((y1 - y2)/(x1 - x2))*(x_min - x1);
-                    float y_max = y1+((y1 - y2)/(x1 - x2))*(x_max - x1);
-
-                    if((y_min > y+taille_case && y_max > y+taille_case) || (y_min < y && y_max < y))
-                    {
-
+                            if(x_min <= x+taille_case && x_max >= x)
+                            {
+                                return 1;
+                            }
+                        }
                     }
                     else
                     {
-                        return 1;
+                        float x_min=x;
+                        float x_max=x+taille_case;
+
+                        if(x1 > x)
+                        {
+                            x_min = x1;
+                        }
+
+                        if(x2 < x+taille_case)
+                        {
+                            x_max = x2;
+                        }
+                        //il faut maintenant savoir la valeur de la droite en x_min et x_max
+                        float y_min = y1+((y1 - y2)/(x1 - x2))*(x_min - x1);
+                        float y_max = y1+((y1 - y2)/(x1 - x2))*(x_max - x1);
+
+                        if(!((y_min > y+taille_case && y_max > y+taille_case) || (y_min < y && y_max < y)))
+                        {
+                            return 1;
+                        }
                     }
                 }
             }
