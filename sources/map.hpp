@@ -31,7 +31,8 @@ class Map
     vector<Point> get_liste_case_occupee();
     vector<Point> get_liste_mur();
     void set_visible(Point a);
-    void set_visible(int x, int y);
+    void set_visible(int destination_x, int destination_y);
+    void set_visible_verifie(int origine_x, int origine_y,int destination_x, int destination_y, int origine_pixel_pos_x, int origine_pixel_pos_y);
     void reset_visible();
     void add_liste_case_occupee(Point a);
     void delete_liste_case_occupee(Point a);

@@ -237,17 +237,42 @@ bool Map::traverse_mur(float x1,float y1,float x2,float y2)
                                 return 1;
                             }
                         }
+                        else
+                        {
+                            float y_max = y2;
+                            float y_min = y1;
+
+                            if(y_min <= y+taille_case && y_max >= y)
+                            {
+                                return 1;
+                            }
+                        }
                     }
                     else if(y1 == y2)
                     {
-                        if(x1 > x2)
+                        if(y1 <= y+taille_case && y1 >= y)
                         {
-                            float x_max = x1;
-                            float x_min = x2;
-
-                            if(x_min <= x+taille_case && x_max >= x)
+                            if(x1 > x2)
                             {
-                                return 1;
+                                float x_max = x1;
+                                float x_min = x2;
+
+                                if(x_min <= x+taille_case && x_max >= x)
+                                {
+                                    return 1;
+                                }
+                            }
+                            else
+                            {
+                                {
+                                    float x_max = x2;
+                                    float x_min = x1;
+
+                                    if(x_min <= x+taille_case && x_max >= x)
+                                    {
+                                        return 1;
+                                    }
+                                }
                             }
                         }
                     }
@@ -399,8 +424,22 @@ void Map::reset_visible()
 
 void Map::set_visible(int x, int y)
 {
-    if(x < largeur && y < hauteur)
+    if(x < largeur && y < hauteur && x >= 0 && y >= 0)
     {
         tableau_cases_visible[(y*largeur)+x] = 1;
+    }
+}
+
+void Map::set_visible_verifie(int origine_x, int origine_y,int destination_x, int destination_y, int origine_pixel_pos_x, int origine_pixel_pos_y)
+{
+    float destination_pixel_pos_x = origine_pixel_pos_x+(destination_x-origine_x)*taille_case;
+    float destination_pixel_pos_y = origine_pixel_pos_y+(destination_y-origine_y)*taille_case;
+
+    if(destination_x < largeur && destination_y < hauteur && destination_x >=0 && destination_y >= 0)
+    {
+        if(!traverse_mur(origine_pixel_pos_x,origine_pixel_pos_y,destination_pixel_pos_x,destination_pixel_pos_y))
+        {
+            tableau_cases_visible[(destination_y*largeur)+destination_x] = 1;
+        }
     }
 }
