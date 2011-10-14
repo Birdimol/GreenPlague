@@ -15,18 +15,27 @@ ZombiManager::ZombiManager(Map *map_envoyee)
     {
         tableau_zombi.push_back(new Zombi(map,20+liste_zombie[i].x*map->getTailleCase(),20+liste_zombie[i].y*map->getTailleCase()));
     }
-
+    nbre_zombie_selectionne = 0;
     image_cible.LoadFromFile("pictures/cercle_selection.png");
     sprite_cible.SetImage(image_cible);
+}
+
+int ZombiManager::get_nbre_zombie_selectionne()
+{
+    return nbre_zombie_selectionne;
 }
 
 void ZombiManager::detecte_selection(int xMousePressed,int yMousePressed,int xMouseReleased,int yMouseReleased)
 {
     int temp = tableau_zombi.size();
+    nbre_zombie_selectionne = 0;
     for(int i=0; i<temp; i++)
     {
         //si le zombi est dans la selection
-        tableau_zombi[i]->est_dans_rectangle(xMousePressed, yMousePressed, xMouseReleased, yMouseReleased);
+        if(tableau_zombi[i]->est_dans_rectangle(xMousePressed, yMousePressed, xMouseReleased, yMouseReleased))
+        {
+            nbre_zombie_selectionne++;
+        }
     }
 
 }
@@ -114,6 +123,27 @@ void ZombiManager::start_movement_for_zombies(Pathfinder* pathfinder)
         }
     }
 
+}
+
+void ZombiManager::set_direction_to_active_zombies(int xMousePressed,int yMousePressed)
+{
+    int temp = tableau_zombi.size();
+
+    vector<int> liste_x;
+    vector<int> liste_y;
+
+    Point arrivee;
+
+    arrivee.x = xMousePressed/map->getTailleCase();
+    arrivee.y = yMousePressed/map->getTailleCase();
+
+    for(int i=0; i<temp; i++)
+    {
+        if(tableau_zombi[i]->getCible())
+        {
+            tableau_zombi[i]->set_direction(arrivee);
+        }
+    }
 }
 
 void ZombiManager::set_destination_to_active_zombies(int xMousePressed,int yMousePressed)

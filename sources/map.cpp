@@ -373,15 +373,20 @@ vector<Point> Map::get_liste_case_occupee()
     return liste_case_occupee;
 }
 
-void Map::afficher(sf::RenderWindow* App)
+void Map::afficher(sf::RenderWindow* App, sf::Rect<float> rect_view)
 {
     int x=0;
     int y=0;
 
-    for(int i=0;i<hauteur;i++)
+    int case_haut = floor(rect_view.Top/taille_case);
+    int case_bas  = floor(rect_view.Bottom/taille_case);
+    int case_gauche  = floor(rect_view.Left/taille_case);
+    int case_droite  = floor(rect_view.Right/taille_case)+1;
+
+    for(int i=case_haut;i<case_bas-1;i++)
     {
         y = i * taille_case;
-        for(int j=0;j<largeur;j++)
+        for(int j=case_gauche;j<case_droite;j++)
         {
             x = j * taille_case;
             if(tableau_cases[(i*largeur)+j] == 1)

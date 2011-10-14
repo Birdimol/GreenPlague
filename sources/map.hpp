@@ -15,7 +15,7 @@ class Map
 {
     public:
     Map(string fichier);
-    void afficher(sf::RenderWindow* App);
+    void afficher(sf::RenderWindow* App, sf::Rect<float> rect_view);
     bool traverse_mur(float x1,float y1,float x2,float y2);
     int collision(float x_cercle,float y_cercle,int *x_bloc,int *y_bloc);
     bool pointdansmur(float x, float y);

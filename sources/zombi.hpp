@@ -34,6 +34,7 @@ class Zombi
     bool is_waiting_for_path();
     void stop_wait_for_path();
     void set_wait_for_path(Point destination);
+    void set_direction(Point destination);
     Point get_destination_memorisee();
 
     //void recevoirDegats(int nbDegats);
@@ -41,6 +42,9 @@ class Zombi
     //bool estVivant();
 
     private:
+    bool regard_force;
+    int regard_force_x;
+    int regard_force_y;
     bool wait_for_path;
     Map *map;
     int rotation;

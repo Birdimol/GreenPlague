@@ -27,6 +27,36 @@ int Jeu::lancer()
     sf::Color background(0,0,0,0);
     sf::Color border(0,200,0,255);
 
+    im_interface.LoadFromFile("pictures/interface.png");
+    im_interface_zombie.LoadFromFile("pictures/icone_zombie.png");
+    im_interface_zombies.LoadFromFile("pictures/icone_zombies.png");
+    im_icone_go.LoadFromFile("pictures/icone_go.png");
+    im_icone_look.LoadFromFile("pictures/icone_look.png");
+    im_icone_go_selected.LoadFromFile("pictures/icone_go_selected.png");
+    im_icone_look_selected.LoadFromFile("pictures/icone_look_selected.png");
+    sf::Sprite s_interface;
+    sf::Sprite s_interface_zombie;
+    sf::Sprite s_interface_zombies;
+    sf::Sprite s_icone_go;
+    sf::Sprite s_icone_go_selected;
+    sf::Sprite s_icone_look;
+    sf::Sprite s_icone_look_selected;
+    s_interface.SetImage(im_interface);
+    s_interface_zombie.SetImage(im_interface_zombie);
+    s_interface_zombies.SetImage(im_interface_zombies);
+    s_icone_go.SetImage(im_icone_go);
+    s_icone_go_selected.SetImage(im_icone_go_selected);
+    s_icone_look.SetImage(im_icone_look);
+    s_icone_look_selected.SetImage(im_icone_look_selected);
+    s_interface.SetPosition(0,0);
+    s_interface_zombie.SetPosition(0,520);
+    s_interface_zombies.SetPosition(0,520);
+
+    s_icone_go.SetPosition(83,528);
+    s_icone_go_selected.SetPosition(83,528);
+    s_icone_look.SetPosition(83,563);
+    s_icone_look_selected.SetPosition(83,563);
+
     //variables pour le cadre de selection
     sf::Shape rectangle_selection   = sf::Shape::Rectangle(
         0,
@@ -50,6 +80,9 @@ int Jeu::lancer()
     int yMouse = -1;
 
     bool mouse_selection = false;
+
+    bool go = 1;
+    bool look = 0;
 
     Map map("map01");
     if(map.getErrorHappened())
@@ -76,7 +109,7 @@ int Jeu::lancer()
 
         zombiManager->set_visibility();
 
-        map.afficher(App);
+        map.afficher(App,View1.GetRect());
 
         // Detections events
         sf::Event Event;
@@ -91,37 +124,86 @@ int Jeu::lancer()
                 yMouse = Event.MouseMove.Y;
             }
 
-            if (Event.Type == sf::Event::MouseButtonPressed)
+            //gestion du click dans le jeu
+            if(yMouse < 520)
             {
-                if(Event.MouseButton.Button == 0)
+                if (Event.Type == sf::Event::MouseButtonPressed)
                 {
-                    mouse_selection = true;
+                    if(look)
+                    {
+                        //click gauche
+                        if(Event.MouseButton.Button == 0)
+                        {
+                            mouse_selection = true;
 
-                    xMousePressed = xMouse;
-                    yMousePressed = yMouse;
+                            xMousePressed = xMouse;
+                            yMousePressed = yMouse;
 
-                    xMousePressed_temp = xMouse;
-                    yMousePressed_temp = yMouse;
+                            xMousePressed_temp = xMouse;
+                            yMousePressed_temp = yMouse;
+                        }
+                        else if(Event.MouseButton.Button == 1)
+                        {
+                            mouse_selection = false;
+
+                            xMousePressed = xMouse;
+                            yMousePressed = yMouse;
+
+                            zombiManager->set_direction_to_active_zombies(xMousePressed+View1.GetRect().Left,yMousePressed+View1.GetRect().Top);
+                        }
+                    }
+                    else if(go)
+                    {
+                        //click dans l'interface
+                        if(Event.MouseButton.Button == 0)
+                        {
+                            mouse_selection = true;
+
+                            xMousePressed = xMouse;
+                            yMousePressed = yMouse;
+
+                            xMousePressed_temp = xMouse;
+                            yMousePressed_temp = yMouse;
+                        }
+                        else if(Event.MouseButton.Button == 1)
+                        {
+                            mouse_selection = false;
+
+                            xMousePressed = xMouse;
+                            yMousePressed = yMouse;
+
+                            zombiManager->set_destination_to_active_zombies(xMousePressed+View1.GetRect().Left,yMousePressed+View1.GetRect().Top);
+                        }
+                    }
                 }
-                else if(Event.MouseButton.Button == 1)
+                if (Event.Type == sf::Event::MouseButtonReleased && Event.MouseButton.Button == 0)
                 {
                     mouse_selection = false;
 
-                    xMousePressed = xMouse;
-                    yMousePressed = yMouse;
+                    xMouseReleased = Event.MouseButton.X;
+                    yMouseReleased = Event.MouseButton.Y;
+                }
 
-                    zombiManager->set_destination_to_active_zombies(xMousePressed+View1.GetRect().Left,yMousePressed+View1.GetRect().Top);
-
+            }
+            else
+            {
+                if (Event.Type == sf::Event::MouseButtonPressed)
+                {
+                    //gestion du clic dans l'interface
+                    if(xMouse >= 83 && xMouse <=113 && yMouse >= 528 && yMouse <= 558)
+                    {
+                        //click look
+                        look = false;
+                        go = true;
+                    }
+                    else if(xMouse >= 83 && xMouse <=113 && yMouse >= 563 && yMouse <= 593)
+                    {
+                        //click go
+                        look = true;
+                        go = false;
+                    }
                 }
             }
-            if (Event.Type == sf::Event::MouseButtonReleased && Event.MouseButton.Button == 0)
-            {
-                mouse_selection = false;
-
-                xMouseReleased = Event.MouseButton.X;
-                yMouseReleased = Event.MouseButton.Y;
-            }
-
         }
 
         if (App->GetInput().IsKeyDown(sf::Key::Escape))
@@ -159,7 +241,6 @@ int Jeu::lancer()
                 View1.Move(0,10.0f);
             }
         }
-
 
         // Gestion du temps
          ElapsedTime = App->GetFrameTime();
@@ -203,6 +284,56 @@ int Jeu::lancer()
             rectangle_selection = sf::Shape::Rectangle(xMousePressed_temp+View1.GetRect().Left,yMousePressed_temp+View1.GetRect().Top,xMouse+View1.GetRect().Left,yMouse+View1.GetRect().Top,background,2,border);
             App->Draw(rectangle_selection);
         }
+
+        //interface
+        App->SetView(App->GetDefaultView());
+
+        App->Draw(s_interface);
+        if(zombiManager->get_nbre_zombie_selectionne() == 1)
+        {
+            App->Draw(s_interface_zombie);
+            if(go)
+            {
+                App->Draw(s_icone_go_selected);
+            }
+            else
+            {
+                App->Draw(s_icone_go);
+            }
+
+            App->Draw(s_icone_look);
+            if(look)
+            {
+                App->Draw(s_icone_look_selected);
+            }
+            else
+            {
+                App->Draw(s_icone_look);
+            }
+        }
+        else if(zombiManager->get_nbre_zombie_selectionne()> 1)
+        {
+            App->Draw(s_interface_zombies);
+            if(go)
+            {
+                App->Draw(s_icone_go_selected);
+            }
+            else
+            {
+                App->Draw(s_icone_go);
+            }
+
+            App->Draw(s_icone_look);
+            if(look)
+            {
+                App->Draw(s_icone_look_selected);
+            }
+            else
+            {
+                App->Draw(s_icone_look);
+            }
+        }
+
 
         // Display window contents on screen
         App->Display();

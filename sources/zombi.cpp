@@ -30,7 +30,9 @@ Zombi::Zombi(Map *map_envoyee, int x, int y)
         direction_x = 1;
         direction_y = 0;
 
-        rotation = 0;
+        rotation = 1;
+
+        regard_force = false;
 
         cible = 0;
 
@@ -55,6 +57,13 @@ void Zombi::set_wait_for_path(Point destination)
 {
     wait_for_path = true;
     destination_memorisee = destination;
+}
+
+void Zombi::set_direction(Point destination)
+{
+    regard_force_x = destination.x;
+    regard_force_y = destination.y;
+    regard_force = true;
 }
 
 void Zombi::stop_wait_for_path()
@@ -122,109 +131,208 @@ void Zombi::tourner(float ElapsedTime)
         float difference_x = sprite.GetPosition().x - cible_x[cible_x.size()-1];
         float difference_y = sprite.GetPosition().y - cible_y[cible_y.size()-1];
 
-        /*if((difference_x > 10 || difference_x < -10) || (difference_y > 10 || difference_y < -10))
-        {*/
-            //on calcule l'angle ideal à avoir pour avancer vers la cible.
-            float angle_parfait = (atan(-(difference_y)/difference_x) / M_PI * 180);
+        //on calcule l'angle ideal à avoir pour avancer vers la cible.
+        float angle_parfait = (atan(-(difference_y)/difference_x) / M_PI * 180);
 
-            //on calcule la distance reelle avec la destination
-            distance = sqrt((difference_x*difference_x) + (difference_y*difference_y));
+        //on calcule la distance reelle avec la destination
+        distance = sqrt((difference_x*difference_x) + (difference_y*difference_y));
 
-            //ajustement de l'angle;
-            while(angle_parfait < 360)
-            {
-                angle_parfait += 360;
-            }
+        //ajustement de l'angle;
+        while(angle_parfait < 360)
+        {
+            angle_parfait += 360;
+        }
 
-            //ajustement de l'angle;
-            while(angle_parfait > 360)
-            {
-                angle_parfait -= 360;
-            }
+        //ajustement de l'angle;
+        while(angle_parfait > 360)
+        {
+            angle_parfait -= 360;
+        }
 
-            //définir la direction
-            if(difference_x >= 0 && difference_y >= 0)
-            {
-                //cout << "joueur en haut a gauche du mob" << endl;
-                angle_parfait -= 180;
-            }
-            else if(difference_x < 0 && difference_y >= 0)
-            {
-                //cout << "joueur en haut a droite du mob" << endl;
-            }
-            else if(difference_x < 0 && difference_y < 0)
-            {
-                //cout << "joueur en bas a droite du mob" << endl;
-            }
-            else if(difference_x >= 0 && difference_y < 0)
-            {
-                //cout << "joueur en bas a gauche du mob" << endl;
-                angle_parfait += 180;
-            }
+        //définir la direction
+        if(difference_x >= 0 && difference_y >= 0)
+        {
+            //cout << "joueur en haut a gauche du mob" << endl;
+            angle_parfait -= 180;
+        }
+        else if(difference_x < 0 && difference_y >= 0)
+        {
+            //cout << "joueur en haut a droite du mob" << endl;
+        }
+        else if(difference_x < 0 && difference_y < 0)
+        {
+            //cout << "joueur en bas a droite du mob" << endl;
+        }
+        else if(difference_x >= 0 && difference_y < 0)
+        {
+            //cout << "joueur en bas a gauche du mob" << endl;
+            angle_parfait += 180;
+        }
 
-            //on regarde la difference entre l'angle du zombie et l'angle que l'on veut
-            difference_angle = (angle_parfait - sprite.GetRotation());
+        //on regarde la difference entre l'angle du zombie et l'angle que l'on veut
+        difference_angle = (angle_parfait - sprite.GetRotation());
 
-            //on ajuste cette donnee
-            if(difference_angle < 0)
-            {
-                difference_angle = difference_angle * -1;
-            }
-            //on ajuste cette donnee
-            if(difference_angle > 180)
-            {
-                difference_angle = 360-difference_angle;
-            }
+        //on ajuste cette donnee
+        if(difference_angle < 0)
+        {
+            difference_angle = difference_angle * -1;
+        }
+        //on ajuste cette donnee
+        if(difference_angle > 180)
+        {
+            difference_angle = 360-difference_angle;
+        }
 
-            //si on est à moins de 10 pixels de la cible, l'état passe à zero
-            if(distance < 10)
-            {
-                etat = 0;
-            }
+        //si on est à moins de 10 pixels de la cible, l'état passe à zero
+        if(distance < 10)
+        {
+            etat = 0;
+        }
 
-            //si le zombie n'est pas encore dans la bonne direction
-            if(difference_angle > 2)
+        //si le zombie n'est pas encore dans la bonne direction
+        if(difference_angle > 2)
+        {
+            //si l'on est trop loin pour attaquer ou que l'on ne voit pas le joueur
+            if(distance > distance_attaque || vois_joueur==0)
             {
-                //si l'on est trop loin pour attaquer ou que l'on ne voit pas le joueur
-                if(distance > distance_attaque || vois_joueur==0)
+                float temp;
+                temp = sprite.GetRotation() + 180;
+
+
+                if((angle_parfait > sprite.GetRotation() && angle_parfait < temp) || ((temp > 360) && (angle_parfait > 0 && angle_parfait < temp-360)))
                 {
-                    float temp;
-                    temp = sprite.GetRotation() + 180;
-
-
-                    if((angle_parfait > sprite.GetRotation() && angle_parfait < temp) || ((temp > 360) && (angle_parfait > 0 && angle_parfait < temp-360)))
+                    if(temp >= 360)
                     {
-                        if(temp >= 360)
+                        if((angle_parfait < 360) || (angle_parfait > 0 && angle_parfait < temp-360))
                         {
-                            if((angle_parfait < 360) || (angle_parfait > 0 && angle_parfait < temp-360))
-                            {
-                                sprite.Rotate(2);
-                                direction_x = cos(sprite.GetRotation() * M_PI / 180);
-                                direction_y = -sin(sprite.GetRotation() * M_PI / 180);
-                            }
-                            else
-                            {
-                                sprite.Rotate(-2);
-                                direction_x = cos(sprite.GetRotation() * M_PI / 180);
-                                direction_y = -sin(sprite.GetRotation() * M_PI / 180);
-                            }
+                            sprite.Rotate(2);
+                            direction_x = cos(sprite.GetRotation() * M_PI / 180);
+                            direction_y = -sin(sprite.GetRotation() * M_PI / 180);
                         }
                         else
                         {
-                            sprite.Rotate(2);
+                            sprite.Rotate(-2);
                             direction_x = cos(sprite.GetRotation() * M_PI / 180);
                             direction_y = -sin(sprite.GetRotation() * M_PI / 180);
                         }
                     }
                     else
                     {
-                        sprite.Rotate(-2);
+                        sprite.Rotate(2);
                         direction_x = cos(sprite.GetRotation() * M_PI / 180);
                         direction_y = -sin(sprite.GetRotation() * M_PI / 180);
                     }
                 }
+                else
+                {
+                    sprite.Rotate(-2);
+                    direction_x = cos(sprite.GetRotation() * M_PI / 180);
+                    direction_y = -sin(sprite.GetRotation() * M_PI / 180);
+                }
             }
-        //}
+        }
+    }
+    else if(regard_force)
+    {
+
+        float difference_x = sprite.GetPosition().x - regard_force_x*map->getTailleCase()-map->getTailleCase()/2;
+        float difference_y = sprite.GetPosition().y - regard_force_y*map->getTailleCase()-map->getTailleCase()/2;
+
+        float angle_parfait = (atan(-(difference_y)/difference_x) / M_PI * 180);
+
+        //ajustement de l'angle;
+        while(angle_parfait < 360)
+        {
+            angle_parfait += 360;
+        }
+
+        //ajustement de l'angle;
+        while(angle_parfait > 360)
+        {
+            angle_parfait -= 360;
+        }
+
+        //définir la direction
+        if(difference_x >= 0 && difference_y >= 0)
+        {
+            //cout << "joueur en haut a gauche du mob" << endl;
+            angle_parfait -= 180;
+        }
+        else if(difference_x < 0 && difference_y >= 0)
+        {
+            //cout << "joueur en haut a droite du mob" << endl;
+        }
+        else if(difference_x < 0 && difference_y < 0)
+        {
+            //cout << "joueur en bas a droite du mob" << endl;
+        }
+        else if(difference_x >= 0 && difference_y < 0)
+        {
+            //cout << "joueur en bas a gauche du mob" << endl;
+            angle_parfait += 180;
+        }
+
+        //on regarde la difference entre l'angle du zombie et l'angle que l'on veut
+        difference_angle = (angle_parfait - sprite.GetRotation());
+        //on ajuste cette donnee
+        if(difference_angle < 0)
+        {
+            difference_angle = difference_angle * -1;
+        }
+        //on ajuste cette donnee
+        if(difference_angle > 180)
+        {
+            difference_angle = 360-difference_angle;
+        }
+
+        cout <<  "Regard force avec angle parfait : " << angle_parfait << ", angle actuel : " << sprite.GetRotation() << endl;
+
+        //si le zombie n'est pas encore dans la bonne direction
+        if(difference_angle > 2)
+        {
+            //si l'on est trop loin pour attaquer ou que l'on ne voit pas le joueur
+            if(distance > distance_attaque || vois_joueur==0)
+            {
+                float temp;
+                temp = sprite.GetRotation() + 180;
+
+
+                if((angle_parfait > sprite.GetRotation() && angle_parfait < temp) || ((temp > 360) && (angle_parfait > 0 && angle_parfait < temp-360)))
+                {
+                    if(temp >= 360)
+                    {
+                        if((angle_parfait <= 360) || (angle_parfait > 0 && angle_parfait < temp-360))
+                        {
+                            sprite.Rotate(2);
+                            direction_x = cos(sprite.GetRotation() * M_PI / 180);
+                            direction_y = -sin(sprite.GetRotation() * M_PI / 180);
+                        }
+                        else
+                        {
+                            sprite.Rotate(-2);
+                            direction_x = cos(sprite.GetRotation() * M_PI / 180);
+                            direction_y = -sin(sprite.GetRotation() * M_PI / 180);
+                        }
+                    }
+                    else
+                    {
+                        sprite.Rotate(2);
+                        direction_x = cos(sprite.GetRotation() * M_PI / 180);
+                        direction_y = -sin(sprite.GetRotation() * M_PI / 180);
+                    }
+                }
+                else
+                {
+                    sprite.Rotate(-2);
+                    direction_x = cos(sprite.GetRotation() * M_PI / 180);
+                    direction_y = -sin(sprite.GetRotation() * M_PI / 180);
+                }
+            }
+        }
+        else
+        {
+            regard_force = false;
+        }
     }
 }
 
