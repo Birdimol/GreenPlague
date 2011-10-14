@@ -134,6 +134,8 @@ int Jeu::lancer()
                         //click gauche
                         if(Event.MouseButton.Button == 0)
                         {
+                            go = true;
+                            look=false;
                             mouse_selection = true;
 
                             xMousePressed = xMouse;
