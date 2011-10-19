@@ -1,5 +1,6 @@
 #include "balle.hpp"
 #include "zombiManager.hpp"
+#include "human_manager.hpp"
 #include "player.hpp"
 #include "map.hpp"
 #include "jeu.hpp"
